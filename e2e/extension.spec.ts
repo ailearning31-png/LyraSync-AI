@@ -1,4 +1,5 @@
 import { chromium, expect, test, type Locator } from '@playwright/test'
+import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
 // Input[type=range] tidak mendukung fill() Playwright — set nilai lewat
@@ -257,6 +258,89 @@ test('audio: file korup menghasilkan pesan error yang jelas', async () => {
     await expect(
       page.getByRole('alert').filter({ hasText: 'Audio tidak dapat diputar' }),
     ).toBeVisible({ timeout: 5000 })
+  } finally {
+    await context.close()
+  }
+})
+
+test('kandidat: estimasi suku kata, heuristik, skor berbobot, bandingkan, terapkan, ekspor eksperimen', async () => {
+  const { context, extensionId } = await launchExtension()
+
+  try {
+    const page = await context.newPage()
+    await page.goto(`chrome-extension://${extensionId}/sidepanel.html`)
+
+    await page.getByLabel('Judul proyek baru').fill('Proyek Kandidat')
+    await page.getByRole('button', { name: 'Buat proyek' }).click()
+    await page.getByRole('button', { name: 'Buka' }).click()
+
+    await page.getByRole('button', { name: 'Tambah frasa' }).click()
+    await page.getByLabel('Sumber').fill('bukan cinta biasa')
+    await page.getByLabel('Bahasa Indonesia').fill('bukan cinta biasa')
+    await page.getByLabel('Mulai (m:ss.d)').fill('0:00.0')
+    await page.getByLabel('Mulai (m:ss.d)').blur()
+    await page.getByLabel('Akhir (m:ss.d)').fill('0:02.0')
+    await page.getByLabel('Akhir (m:ss.d)').blur()
+
+    // Kandidat A: teks sama dengan sumber → 7 suku kata, kepadatan setara
+    await page.getByRole('button', { name: 'Tambah kandidat' }).click()
+    await expect(page.getByText('belum cukup data').first()).toBeVisible()
+    await page.getByLabel('Teks kandidat (A)').fill('bukan cinta biasa')
+    await expect(page.getByText('≈ 7 suku kata').first()).toBeVisible()
+    await expect(page.locator('.chip-setara')).toBeVisible()
+
+    // Kandidat B: jauh lebih pendek ('cinta' = 2) → kepadatan 1.0/dtk vs 3.5/dtk → renggang
+    await page.getByRole('button', { name: 'Tambah kandidat' }).click()
+    await page.getByLabel('Teks kandidat (B)').fill('cinta')
+    await expect(page.getByText('≈ 2 suku kata')).toBeVisible()
+    await expect(page.locator('.chip-renggang')).toBeVisible()
+
+    // Koreksi manual suku kata B: 5 → kepadatan 2.5/dtk → setara; lalu kembali ke estimasi
+    await page.getByLabel('Koreksi suku kata (B)').fill('5')
+    await expect(page.locator('.chip-renggang')).toHaveCount(0)
+    await page.getByRole('button', { name: 'Pakai estimasi (B)' }).click()
+    await expect(page.locator('.chip-renggang')).toBeVisible()
+
+    // Skor manual kandidat A (kelima dimensi) → total berbobot hipotesis 3.6
+    await page.getByLabel('Skor makna (A)').selectOption('3')
+    await page.getByLabel('Skor alami (A)').selectOption('4')
+    await page.getByLabel('Skor ritme (A)').selectOption('4')
+    await page.getByLabel('Skor stres (A)').selectOption('3')
+    await page.getByLabel('Skor nyanyi (A)').selectOption('4')
+    await expect(page.getByText('≈ 3.6 (hipotesis 30/20/20/20/10)')).toBeVisible()
+
+    // Perbandingan berdampingan
+    await page.getByRole('button', { name: 'Bandingkan' }).click()
+    const table = page.getByRole('table')
+    await expect(table).toBeVisible()
+    await expect(table).toContainText('cinta biasa')
+    await expect(table).toContainText('berisiko renggang')
+
+    // Terapkan kandidat B sebagai adaptasi terpilih
+    await page.getByRole('button', { name: 'Gunakan sebagai adaptasi (B)' }).click()
+    await expect(page.getByLabel('Bahasa Indonesia')).toHaveValue('cinta')
+
+    // Ekspor catatan eksperimen Markdown
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Unduh eksperimen' }).click(),
+    ])
+    expect(download.suggestedFilename()).toMatch(/^eksperimen-.*\.md$/)
+    const markdown = await readFile(await download.path(), 'utf-8')
+    expect(markdown).toContain('# Eksperimen adaptasi — Proyek Kandidat')
+    expect(markdown).toContain('### Kandidat A')
+    expect(markdown).toContain('estimasi/hipotesis')
+
+    // Kandidat + skor + koreksi bertahan setelah panel dibuka ulang
+    await expect(page.getByText('Tersimpan')).toBeVisible({ timeout: 5000 })
+    await page.close()
+    const page2 = await context.newPage()
+    await page2.goto(`chrome-extension://${extensionId}/sidepanel.html`)
+    await page2.getByRole('tab', { name: 'Proyek' }).click()
+    await page2.getByRole('button', { name: 'Buka' }).click()
+    await expect(page2.getByLabel('Teks kandidat (B)')).toHaveValue('cinta')
+    await expect(page2.getByLabel('Skor makna (A)')).toHaveValue('3')
+    await expect(page2.getByLabel('Bahasa Indonesia')).toHaveValue('cinta')
   } finally {
     await context.close()
   }

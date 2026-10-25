@@ -9,6 +9,26 @@ export interface Phrase {
   end: number | null
   /** Catatan bebas pengguna: jeda, nada panjang, bagian sulit. */
   notes: string
+  /** Maksimal 3 kandidat adaptasi (slot A/B/C); indonesian = teks yang diterima. */
+  candidates: Candidate[]
+}
+
+/** Skor manual 1–5 per dimensi; null = belum dinilai. */
+export interface CandidateScores {
+  meaning: number | null
+  naturalness: number | null
+  rhythm: number | null
+  stress: number | null
+  singability: number | null
+}
+
+export interface Candidate {
+  id: string
+  text: string
+  /** Koreksi manual jumlah suku kata; null = pakai estimasi otomatis. */
+  syllablesOverride: number | null
+  scores: CandidateScores
+  notes: string
 }
 
 export interface Project {

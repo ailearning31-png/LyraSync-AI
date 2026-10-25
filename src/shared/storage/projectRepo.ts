@@ -21,6 +21,18 @@ function normalizeProject(record: Project): Project {
       start: phrase.start ?? null,
       end: phrase.end ?? null,
       notes: phrase.notes ?? '',
+      candidates: (phrase.candidates ?? []).map((candidate) => ({
+        ...candidate,
+        syllablesOverride: candidate.syllablesOverride ?? null,
+        notes: candidate.notes ?? '',
+        scores: {
+          meaning: candidate.scores?.meaning ?? null,
+          naturalness: candidate.scores?.naturalness ?? null,
+          rhythm: candidate.scores?.rhythm ?? null,
+          stress: candidate.scores?.stress ?? null,
+          singability: candidate.scores?.singability ?? null,
+        },
+      })),
     })),
   }
 }

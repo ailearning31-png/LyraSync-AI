@@ -74,19 +74,19 @@ Acceptance criteria:
 - Audio and text remain local unless explicit integration is enabled. → audio & teks hanya IndexedDB lokal; tidak ada kode jaringan; izin manifest tetap hanya `sidePanel` ✓
 
 ## Phase 4 — Candidate evaluation helpers
-**Status:** Not started
+**Status:** Ready for review (2026-10-25)
 
 Tasks:
-- [ ] Add editable syllable estimates.
-- [ ] Add phrase-length and crowding heuristics.
-- [ ] Add manual scores and notes.
-- [ ] Label all heuristic results as estimates.
-- [ ] Preserve a way to override automated suggestions.
+- [x] Add editable syllable estimates. (estimasi otomatis: kelompok vokal Indonesia — hiatus di tengah kata dihitung terpisah, diftong ai/au/oi hanya di akhir kata; kana Jepang = 1 mora; kanji ditandai "tidak pasti"; koreksi manual menang + tombol kembali ke estimasi)
+- [x] Add phrase-length and crowding heuristics. (kepadatan suku kata/dtk kandidat vs sumber dari durasi frasa; chip risiko padat/renggang/setara dengan ambang hipotesis 1,25/0,7; tanpa durasi → "belum cukup data")
+- [x] Add manual scores and notes. (3 kandidat per frasa (A meaning-first/B balanced/C singability-first), skor manual 1–5 untuk 5 dimensi, catatan per frasa & per kandidat, tombol "Gunakan" menyalin kandidat ke adaptasi terpilih)
+- [x] Label all heuristic results as estimates. (semua chip diberi akhiran "(estimasi)", total berbobot dilabel "(hipotesis 30/20/20/20/10)", caption tabel: bukan bukti kecocokan melodi)
+- [x] Preserve a way to override automated suggestions. (koreksi suku kata manual tersimpan dan dipakai di semua perhitungan; skor hanya dari pengguna)
 
 Acceptance criteria:
-- User can compare candidates side by side.
-- Heuristics do not claim to prove melodic fit.
-- At least one documented experiment can be recorded in-app or exported.
+- User can compare candidates side by side. → tabel perbandingan per frasa (kolom A/B/C: teks, suku kata, kepadatan, risiko, 5 skor, total, catatan) — E2E Chromium ✓
+- Heuristics do not claim to prove melodic fit. → label estimasi/hipotesis di seluruh UI + unit test memastikan total null saat data kurang ✓
+- At least one documented experiment can be recorded in-app or exported. → "Unduh eksperimen" menghasilkan Markdown lengkap per template log (E2E memverifikasi isi file yang benar-benar diunduh) ✓
 
 ## Phase 5 — AI adaptation integration
 **Status:** Not started
@@ -135,6 +135,6 @@ Acceptance criteria:
 - Rollback to the last stable version is possible.
 
 ## Next action
-1. Review Phase 1–3 secara manual di Chrome: load `dist/`, buat proyek, impor audio, set timestamp, amati overlay mengikuti putar/seek.
-2. Jalankan EXP-0001 saat memungkinkan (worksheet siap) — datanya tetap dibutuhkan untuk kalibrasi heuristik.
-3. Setelah review: mulai Phase 4 (pembantu evaluasi kandidat: estimasi suku kata, heuristik kepadatan, skor manual, label estimasi). Do not begin advanced audio analysis before the overlay and phrase-level workflow have demonstrated value.
+1. Review Phase 1–4 secara manual di Chrome: load `dist/`, impor audio, tulis kandidat A/B/C, bandingkan, ekspor eksperimen.
+2. **Jalankan EXP-0001** (worksheet siap) — data nyata kini juga jadi bahan kalibrasi ambang heuristik 1,25/0,7 dan bobot skor.
+3. Phase 5 (integrasi AI) membutuhkan keputusan pengguna: penyedia model, privasi, dan cara kredensial (backend vs konfigurasi pengguna) — jangan pakai kunci privat di kode ekstensi. Do not begin advanced audio analysis before the overlay and phrase-level workflow have demonstrated value.

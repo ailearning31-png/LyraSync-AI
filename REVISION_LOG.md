@@ -134,3 +134,25 @@ Use one entry per bug fix, implementation change, or meaningful revision. Keep o
 - **Known side effects / risks:** Durasi audio bergantung metadata yang terbaca saat pemutar aktif; overlay hanya tepat seakurat entri manual pengguna (by design). File >100 MB ditolak dengan pesan (skenario penyimpanan penuh belum diuji). Kecepatan putar & loop frasa belum ada (kandidat fitur dari hasil EXP-0001).
 - **Related entries:** REV-0004 (baseline Phase 2).
 - **Follow-up:** Review manual pengguna di Chrome; EXP-0001 tetap terbuka; coding berikutnya = Phase 4 (pembantu evaluasi kandidat).
+
+---
+
+## 2026-10-25 — Phase 4 implementation
+
+### REV-0006 — Candidate evaluation helpers (estimasi suku kata, heuristik kepadatan, skor manual, ekspor eksperimen)
+- **Date:** 2026-10-25
+- **Status:** Verified
+- **Reported behavior:** Not a bug — implementation task (ROADMAP Phase 4). Tidak ada kandidat/estimasi/skor sebelumnya.
+- **Expected behavior:** 3 kandidat per frasa dengan label pendekatan; estimasi suku kata yang dapat dikoreksi; heuristik kepadatan berlabel estimasi; skor manual 5 dimensi dengan total berbobot berlabel hipotesis; perbandingan berdampingan; ekspor eksperimen (kriteria Phase 4).
+- **Actual behavior:** Semua kriteria terverifikasi otomatis (unit + E2E Chromium termasuk memverifikasi isi file Markdown yang benar-benar diunduh).
+- **Root cause:** n/a — feature work. Dua perbaikan heuristik penting terdokumentasi di bawah.
+- **Fix or change:** Tipe `Candidate`/`CandidateScores` (Phrase.candidates, maks 3) dengan validasi toleran + normalisasi record lama; `heuristics.ts` — `estimateSyllables` (Indonesia: tiap vokal = nukleus, diftong ai/au/oi hanya disatukan di akhir kata; kana Jepang = 1 mora; kanji/kata tanpa vokal → uncertain), `effectiveSyllables` (override manual menang), `computeDensity`, `densityRisk` (ambang 1,25/0,7 dilabel HIPOTESIS), `weightedTotal` (null bila belum lengkap — tanpa presisi palsu); `experimentExport.ts` (Markdown per template log); UI `CandidateSection` (baris kandidat: teks, estimasi+override, chip risiko, 5 select skor, total, catatan, Gunakan/Hapus; tabel perbandingan berdampingan); PhraseCard & ProjectEditor diintegrasikan; tombol "Unduh eksperimen".
+- **Perbaikan heuristik 1 (dari kegagalan tes):** versi awal menghitung kelompok vokal beruntun → "biasa" (bi-a-sa) salah dihitung 2 karena "ia" menyatu. Diperbaiki: tiap vokal = satu nukleus; diftong hanya di posisi akhir kata (pan-tai, ban-gau). Kegagalan tes inilah yang menangkap bug heuristik — nilai regresinya tinggi.
+- **Perbaikan heuristik 2:** `densityRisk(2.1, 3.0)` gagal karena floating point (0.7000…01) — ditambah epsilon 1e-9.
+- **Files changed:** `src/shared/{types,validation,heuristics(+test),experimentExport(+test)}.ts`, `src/shared/storage/projectRepo.ts` (+fixture test), fixture update di 3 test lain, `src/sidepanel/components/CandidateSection.tsx` (baru), `{PhraseCard,ProjectEditor}.tsx`, `sidepanel.css`, `App.tsx` (footer Fase 4), `e2e/extension.spec.ts` (+tes kandidat), docs.
+- **Tests run:** `npm run verify` → build ✓, tsc ✓, ESLint ✓, Vitest **54/54**, Playwright **6/6**.
+- **Test results:** All PASS, exit 0.
+- **Regression checks:** Seluruh E2E Phase 1–3 tetap lulus setelah perubahan skema (normalisasi candidates [] untuk record lama teruji unit test).
+- **Known side effects / risks:** Estimasi suku kata tetap heuristik (nama/negara/singkatan bisa meleset — koreksi manual tersedia dan JUSTRU jadi mekanisme utama). Ambang risiko & bobot skor belum terkalibrasi (menunggu data EXP-0001). Regenerasi kandidat otomatis menunggu Fase 5 (AI).
+- **Related entries:** REV-0005 (baseline Phase 3).
+- **Follow-up:** Review manual pengguna; EXP-0001 kini juga menghasilkan data kalibrasi ambang/bobot; coding berikutnya = Phase 5 (integrasi AI) yang MEMBUTUHKAN keputusan pengguna soal penyedia model & cara kredensial.

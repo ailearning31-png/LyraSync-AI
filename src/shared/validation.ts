@@ -1,4 +1,4 @@
-import type { Phrase, Project } from './types'
+import type { Candidate, Phrase, Project } from './types'
 
 // Pemastian bentuk data saat MEMBACA dari penyimpanan: record yang rusak
 // (mis. hasil penulisan yang terpotong atau versi lama) harus bisa dilewati,
@@ -16,7 +16,38 @@ export function isPhraseRecord(value: unknown): value is Phrase {
     typeof p.indonesian === 'string' &&
     timingOk(p.start) &&
     timingOk(p.end) &&
-    (p.notes === undefined || typeof p.notes === 'string')
+    (p.notes === undefined || typeof p.notes === 'string') &&
+    (p.candidates === undefined ||
+      (Array.isArray(p.candidates) && p.candidates.every(isCandidateRecord)))
+  )
+}
+
+export function isCandidateRecord(value: unknown): value is Candidate {
+  if (typeof value !== 'object' || value === null) return false
+  const c = value as Record<string, unknown>
+  const scores = c.scores as Record<string, unknown> | undefined
+  return (
+    typeof c.id === 'string' &&
+    c.id.length > 0 &&
+    typeof c.text === 'string' &&
+    timingOk(c.syllablesOverride) &&
+    (scores === undefined ||
+      (typeof scores === 'object' &&
+        scores !== null &&
+        scoreOk(scores.meaning) &&
+        scoreOk(scores.naturalness) &&
+        scoreOk(scores.rhythm) &&
+        scoreOk(scores.stress) &&
+        scoreOk(scores.singability))) &&
+    (c.notes === undefined || typeof c.notes === 'string')
+  )
+}
+
+function scoreOk(value: unknown): boolean {
+  return (
+    value === undefined ||
+    value === null ||
+    (typeof value === 'number' && Number.isFinite(value))
   )
 }
 

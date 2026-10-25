@@ -103,6 +103,6 @@ A phase is ready to advance when:
 
 ## 9. Current next action
 
-1. **Phase 1–3 built and verified in Chromium** (shell; editor + persistensi; audio + timestamp manual + overlay mengikuti seek — semua lokal). Manual load in branded Chrome pending user verification.
-2. **EXP-0001 is still open and must be run** (`EXPERIMENT_WORKSHEET_EXP-0001.md` ready; lyrics only in gitignored `local/` — repo is public). Alat Fase 3 (loop tidak ada lagi — catat sebagai input untuk ekspor pengalaman nyata).
-3. Next coding phase: Phase 4 — pembantu evaluasi kandidat (estimasi suku kata yang dapat dikoreksi, heuristik kepadatan/risiko berlabel estimasi, skor manual, perbandingan kandidat).
+1. **Phase 1–4 built and verified in Chromium** (shell; editor + persistensi; audio + timestamp + overlay; kandidat A/B/C + estimasi suku kata yang dapat dikoreksi + heuristik kepadatan berlabel estimasi + skor manual berbobot + tabel perbandingan + ekspor eksperimen).
+2. **EXP-0001 is still open and must be run** (`EXPERIMENT_WORKSHEET_EXP-0001.md` ready; lyrics only in gitignored `local/` — repo is public). Data nyata kini dibutuhkan ganda: memvalidasi metode DAN mengkalibrasi ambang heuristik (1,25/0,7) serta bobot skor.
+3. **Phase 5 (integrasi AI) membutuhkan keputusan pengguna sebelum coding:** penyedia/model, kebutuhan privasi, dan mekanisme kredensial (backend aman vs konfigurasi pengguna — kunci privat TIDAK boleh masuk kode ekstensi).

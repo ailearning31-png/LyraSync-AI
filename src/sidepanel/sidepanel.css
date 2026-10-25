@@ -143,7 +143,8 @@ button:disabled {
 }
 
 input[type='text'],
-textarea {
+textarea,
+select {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -155,8 +156,19 @@ textarea {
   resize: vertical;
 }
 
+input[type='number'] {
+  width: 90px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 6px 8px;
+  font-size: 0.82rem;
+}
+
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: 2px solid var(--accent-soft);
   border-color: var(--accent);
 }
@@ -474,6 +486,182 @@ label {
   border: none;
   background: transparent;
   padding: 2px 6px;
+}
+
+/* --- Kandidat adaptasi (Fase 4) --- */
+.candidate-section {
+  margin-top: 10px;
+  border-top: 1px dashed var(--border);
+  padding-top: 8px;
+}
+
+.candidate-section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.candidate-section-header .section-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.candidate-spacer {
+  flex: 1;
+}
+
+.candidate {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.candidate-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.candidate-slot {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 6px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+
+.candidate-syllables {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.candidate-metrics {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 6px 0;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.chip {
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  white-space: nowrap;
+}
+
+.chip-padat {
+  background: #fdeaea;
+  border-color: #e0b4b4;
+  color: #b3413f;
+}
+
+.chip-renggang {
+  background: #fff6e5;
+  border-color: #e6cf9c;
+  color: #8a6d1f;
+}
+
+.chip-setara {
+  background: #e9f6ec;
+  border-color: #b4d4bc;
+  color: #2e7d32;
+}
+
+@media (prefers-color-scheme: dark) {
+  .chip-padat {
+    background: #3a1f1f;
+    color: #e08a88;
+  }
+
+  .chip-renggang {
+    background: #3a311a;
+    color: #e0c56a;
+  }
+
+  .chip-setara {
+    background: #1c3324;
+    color: #7fc97f;
+  }
+}
+
+.candidate-override {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.candidate-override label {
+  margin-bottom: 3px;
+}
+
+.candidate-scores {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.score-field {
+  width: 92px;
+}
+
+.candidate-total {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  padding-bottom: 7px;
+}
+
+.candidate-notes {
+  margin-top: 2px;
+}
+
+.candidate-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 0.75rem;
+}
+
+.candidate-table caption {
+  text-align: left;
+  font-size: 0.72rem;
+  color: var(--muted);
+  padding-bottom: 6px;
+}
+
+.candidate-table th,
+.candidate-table td {
+  border: 1px solid var(--border);
+  padding: 4px 6px;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.candidate-table thead th {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.candidate-table tbody th {
+  color: var(--muted);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .error-banner {

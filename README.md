@@ -6,18 +6,21 @@ Ekstensi Chrome (Manifest V3) untuk membantu mengadaptasi lirik lagu ke bahasa I
 
 ## Status proyek
 
-Fase 3 — audio lokal, timestamp manual, overlay terkoordinasi. Status fase dan kriteria kelulusan: lihat `ROADMAP.md`. Keputusan & arsitektur: `PROJECT_BRAIN.md`.
+Fase 4 — pembantu evaluasi kandidat. Status fase dan kriteria kelulusan: lihat `ROADMAP.md`. Keputusan & arsitektur: `PROJECT_BRAIN.md`.
 
-## Fitur saat ini (Fase 3)
+## Fitur saat ini (Fase 4)
 
 - Membuat, membuka, mengubah judul, dan menghapus proyek (hapus dengan konfirmasi dua langkah).
-- Editor per frasa dengan tiga kolom teks independen: **Sumber**, **Romanisasi**, **Bahasa Indonesia**, plus catatan bebas (jeda/nada panjang/bagian sulit).
-- **Impor audio lokal** (disimpan sebagai bytes di IndexedDB — tidak pernah diunggah; batas 100 MB) dengan putar/jeda, slider seek, dan tampilan durasi.
-- **Timestamp manual** per frasa: ketik format `m:ss.d` (invalid dikembalikan aman) atau ambil posisi pemutar lewat tombol "Set mulai/akhir".
-- **Overlay terkoordinasi**: frasa yang rentang waktunya memuat posisi audio disorot otomatis (auto-scroll), menampilkan Sumber/Romanisasi/Indonesia berdampingan; klik baris untuk melompat.
-- Autosave ke IndexedDB (debounce 400 ms; flush saat pindah tab atau panel ditutup) dengan indikator status.
-- Ekspor: salin lirik berformat ke clipboard dan unduh backup JSON.
-- Validasi dasar: judul wajib, record korup dilewati tanpa menggagalkan proyek lain.
+- Editor per frasa: **Sumber**, **Romanisasi**, **Bahasa Indonesia** (adaptasi terpilih), catatan jeda/nada panjang.
+- **Impor audio lokal** (IndexedDB, tidak pernah diunggah; batas 100 MB) + putar/jeda/seek/durasi.
+- **Timestamp manual** (`m:ss.d` atau ambil posisi pemutar) dan **overlay** yang menyorot frasa aktif mengikuti audio.
+- **Tiga kandidat per frasa** (A meaning-first / B balanced / C singability-first) dengan tombol "Gunakan" untuk menerapkan sebagai adaptasi terpilih.
+- **Estimasi suku kata otomatis** (Indonesia & mora Jepang; kanji ditandai tidak pasti) yang **dapat dikoreksi manual**.
+- **Heuristik kepadatan** kandidat vs sumber (per detik) dengan chip risiko — semua **berlabel estimasi**, ambang masih hipotesis.
+- **Skor manual 1–5** untuk 5 dimensi + total berbobot (hipotesis 30/20/20/20/10; "belum cukup data" bila belum lengkap).
+- **Tabel perbandingan berdampingan** per frasa.
+- **Ekspor**: salin lirik, unduh backup JSON, dan **unduh catatan eksperimen (.md)** siap tempel ke log eksperimen.
+- Autosave IndexedDB dengan indikator status; validasi dasar & pemulihan record korup.
 
 ## Prasyarat
 
@@ -51,15 +54,13 @@ Catatan: butuh Chrome/Chromium ≥ 114 (`minimum_chrome_version` di manifest).
 
 `npm run test:e2e` memuat build `dist/` sebagai ekstensi unpacked ke Chromium penuh (Playwright, `channel: 'chromium'`) lalu memverifikasi: service worker aktif, sidepanel dirender, navigasi antar-tab bekerja, dan tidak ada error konsol/halaman. Headless shell default Playwright **tidak** mendukung ekstensi — karena itu channel `chromium` wajib.
 
-## Batasan (Fase 3)
+## Batasan (Fase 4)
 
-- Tidak ada estimasi suku kata, kandidat adaptasi, atau AI — Fase 4–5.
-- Analisis audio otomatis (beat/onset/pitch) **sengaja tidak ada** — audio adalah referensi timing yang dikoreksi manual; sesuai prinsip proyek.
-- Kecepatan putar & loop frasa belum ada.
-- Belum ada undo/redo; ada backup JSON sebagai jaring pengaman.
+- Estimasi suku kata **adalah heuristik** (nama, singkatan, dan ejaan tak baku bisa meleset) — koreksi manual disediakan dan diutamakan.
+- Ambang risiko (1,25/0,7) dan bobot skor (30/20/20/20/10) **masih hipotesis** — menunggu kalibrasi dari eksperimen nyata (EXP-0001).
+- Belum ada AI/regenerasi kandidat (Fase 5 — butuh keputusan penyedia & kredensial), analisis audio otomatis (Fase 6, opsional), undo/redo.
 - Clipboard tidak di-assert di E2E (keterbatasan headless); fungsi teks ekspor diuji unit test, tombol salin diuji manual.
-- Ikon ekstensi belum dibuat (memakai ikon default Chrome).
-- E2E otomatis memakai Chromium; pemuatan manual di Chrome branded dianjurkan (lihat `TEST_CHECKLIST.md` bagian B).
+- Ikon ekstensi belum dibuat; E2E memakai Chromium — muat manual di Chrome branded dianjurkan (`TEST_CHECKLIST.md` bagian B).
 
 ## Privasi
 

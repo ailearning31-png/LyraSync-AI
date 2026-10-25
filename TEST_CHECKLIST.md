@@ -37,14 +37,14 @@ Check only tests that were actually performed. Add test IDs and evidence as impl
 - [x] Text timing is not inferred solely from character count. (waktu hanya berasal dari entri manual/posisi pemutar; tidak ada estimasi otomatis di kode)
 
 ## E. Candidate adaptation and scoring
-- [ ] Candidate variants are clearly labeled.
-- [ ] User can edit and compare candidates.
-- [ ] Syllable estimates can be corrected manually.
-- [ ] Score explanations are visible.
-- [ ] Unverified heuristic scores are labeled as estimates.
-- [ ] Held vowels and melisma are not automatically treated as errors.
-- [ ] User can approve, reject, or regenerate an individual phrase.
-- [ ] Meaning drift and naturalness can be recorded separately from rhythm.
+- [x] Candidate variants are clearly labeled. (2026-10-25: slot A/B/C dengan nama pendekatan; E2E Chromium)
+- [x] User can edit and compare candidates. (editor per kandidat + tabel perbandingan berdampingan; E2E)
+- [x] Syllable estimates can be corrected manually. (koreksi manual mengubah kepadatan & risiko — E2E; tombol Pakai estimasi mengembalikan)
+- [x] Score explanations are visible. (label 5 dimensi + bobot ditampilkan + total berbobot dengan label hipotesis)
+- [x] Unverified heuristic scores are labeled as estimates. (chip "(estimasi)", total "(hipotesis)", caption tabel; unit test: total null bila data kurang — tanpa presisi palsu)
+- [x] Held vowels and melisma are not automatically treated as errors. (tidak ada flag otomatis; catatan bebas; indikator renggang hanyalah estimasi)
+- [x] User can approve, reject, or regenerate an individual phrase. (Gunakan = terima, Hapus kandidat = tolak, tulis ulang manual; regenerasi otomatis menyusul di Fase 5 — AI)
+- [x] Meaning drift and naturalness can be recorded separately from rhythm. (skor terpisah per dimensi + catatan kandidat)
 
 ## F. Persistence and recovery
 - [x] Project can be saved. (2026-10-25: autosave + tombol Simpan sekarang; unit test repo IndexedDB via fake-indexeddb)
@@ -73,4 +73,4 @@ For every bug fix:
 - [ ] If tests are blocked, record the reason and do not claim verified success.
 
 ## Current test status
-2026-10-25 — Phase 0: seksi A. Phase 1–3: `npm run verify` exit 0 — build + tsc + ESLint + **35 unit test** (7 berkas: repo proyek/audio IndexedDB, validasi, format & parse waktu, frasa aktif, ekspor, manifest, formatDuration) + **5 E2E Chromium** (smoke, persistensi, hapus dua langkah, audio+timestamp+overlay mengikuti seek+pindah frasa, file korup). Pending: muat manual di Chrome branded, verifikasi visual baris panjang, skenario penyimpanan penuh, seksi E/G/H (fiturnya menyusul).
+2026-10-25 — Phase 0: seksi A. Phase 1–4: `npm run verify` exit 0 — build + tsc + ESLint + **54 unit test** (9 berkas: repo proyek/audio, validasi, waktu, frasa aktif, **heuristik suku kata/kepadatan/skor berbobot**, ekspor lirik & **ekspor eksperimen**, manifest) + **6 E2E Chromium** (smoke, persistensi, hapus dua langkah, audio+overlay, file korup, **alur kandidat lengkap: estimasi→override→skor→bandingkan→terapkan→ekspor .md→persistensi**). Pending: muat manual di Chrome branded, verifikasi visual, skenario penyimpanan penuh, seksi G (AI — Fase 5) & H.

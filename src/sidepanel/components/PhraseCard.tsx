@@ -1,8 +1,9 @@
-import type { Phrase } from '../../shared/types'
+import type { Candidate, CandidateScores, Phrase } from '../../shared/types'
+import { CandidateSection, type CandidateSectionHandlers } from './CandidateSection'
 import { TimeField } from './TimeField'
 
 const FIELD_LABELS: {
-  field: keyof Omit<Phrase, 'id' | 'start' | 'end' | 'notes'>
+  field: keyof Omit<Phrase, 'id' | 'start' | 'end' | 'notes' | 'candidates'>
   label: string
   placeholder: string
 }[] = [
@@ -30,6 +31,11 @@ export function PhraseCard({
   onRequestDelete,
   onCancelDelete,
   onConfirmDelete,
+  onCandidateAdd,
+  onCandidateChange,
+  onCandidateScoreChange,
+  onCandidateDelete,
+  onUseCandidate,
 }: {
   index: number
   phrase: Phrase
@@ -45,7 +51,30 @@ export function PhraseCard({
   onRequestDelete: (id: string) => void
   onCancelDelete: () => void
   onConfirmDelete: (id: string) => void
+  onCandidateAdd: (phraseId: string) => void
+  onCandidateChange: (phraseId: string, candId: string, patch: Partial<Candidate>) => void
+  onCandidateScoreChange: (
+    phraseId: string,
+    candId: string,
+    dim: keyof CandidateScores,
+    value: number | null,
+  ) => void
+  onCandidateDelete: (phraseId: string, candId: string) => void
+  onUseCandidate: (phraseId: string, candId: string) => void
 }) {
+  const duration =
+    phrase.start !== null && phrase.end !== null && phrase.end > phrase.start
+      ? Math.round((phrase.end - phrase.start) * 10) / 10
+      : null
+
+  const candidateHandlers: CandidateSectionHandlers = {
+    onAdd: () => onCandidateAdd(phrase.id),
+    onChange: (candId, patch) => onCandidateChange(phrase.id, candId, patch),
+    onScoreChange: (candId, dim, value) =>
+      onCandidateScoreChange(phrase.id, candId, dim, value),
+    onDelete: (candId) => onCandidateDelete(phrase.id, candId),
+    onUse: (candId) => onUseCandidate(phrase.id, candId),
+  }
   return (
     <section className="phrase-card" aria-label={`Frasa ${index + 1}`}>
       <header className="phrase-header">
@@ -133,6 +162,12 @@ export function PhraseCard({
           onChange={(event) => onChange(phrase.id, 'notes', event.target.value)}
         />
       </div>
+
+      <CandidateSection
+        phrase={phrase}
+        duration={duration}
+        handlers={candidateHandlers}
+      />
     </section>
   )
 }

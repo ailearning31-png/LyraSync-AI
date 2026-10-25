@@ -28,6 +28,7 @@ describe('buildExportText', () => {
           start: null,
           end: null,
           notes: '',
+          candidates: [],
         },
       ],
     })
@@ -43,8 +44,8 @@ describe('buildExportText', () => {
   it('menyimpan urutan frasa pada tiap seksi', () => {
     const project = makeProject({
       phrases: [
-        { id: 'a', source: 'satu', romanized: '', indonesian: '', start: null, end: null, notes: '' },
-        { id: 'b', source: 'dua', romanized: '', indonesian: '', start: null, end: null, notes: '' },
+        { id: 'a', source: 'satu', romanized: '', indonesian: '', start: null, end: null, notes: '', candidates: [] },
+        { id: 'b', source: 'dua', romanized: '', indonesian: '', start: null, end: null, notes: '', candidates: [] },
       ],
     })
     const text = buildExportText(project)
@@ -57,7 +58,7 @@ describe('buildExportText', () => {
 
   it('mendukung karakter Unicode Indonesia dan Jepang', () => {
     const project = makeProject({
-      phrases: [{ id: 'a', source: '太陽', romanized: 'taiyō', indonesian: 'mentari terbit', start: null, end: null, notes: '' }],
+      phrases: [{ id: 'a', source: '太陽', romanized: 'taiyō', indonesian: 'mentari terbit', start: null, end: null, notes: '', candidates: [] }],
     })
     const text = buildExportText(project)
     expect(text).toContain('太陽')

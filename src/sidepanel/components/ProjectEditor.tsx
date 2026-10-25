@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import { buildExportText, safeFileName } from '../../shared/exportText'
 import {
+  buildExperimentMarkdown,
+  experimentFileName,
+} from '../../shared/experimentExport'
+import {
   MAX_AUDIO_BYTES,
   deleteAudio,
   getAudio,
   saveAudio,
 } from '../../shared/storage/audioRepo'
 import { getProject, saveProject } from '../../shared/storage/projectRepo'
-import type { Phrase, Project } from '../../shared/types'
+import type { Candidate, CandidateScores, Phrase, Project } from '../../shared/types'
 import { useAudioPlayer } from '../hooks/useAudioPlayer'
 import { useAutoSave, type SaveStatus } from '../hooks/useAutoSave'
 import { AudioControls } from './AudioControls'
@@ -151,6 +155,7 @@ export function ProjectEditor({
           start: null,
           end: null,
           notes: '',
+          candidates: [],
         },
       ],
     }))
@@ -162,6 +167,105 @@ export function ProjectEditor({
       phrases: current.phrases.filter((phrase) => phrase.id !== phraseId),
     }))
   }
+
+  const handleCandidateAdd = (phraseId: string) =>
+    mutate((current) => ({
+      ...current,
+      phrases: current.phrases.map((phrase) =>
+        phrase.id === phraseId && phrase.candidates.length < 3
+          ? {
+              ...phrase,
+              candidates: [
+                ...phrase.candidates,
+                {
+                  id: crypto.randomUUID(),
+                  text: '',
+                  syllablesOverride: null,
+                  scores: {
+                    meaning: null,
+                    naturalness: null,
+                    rhythm: null,
+                    stress: null,
+                    singability: null,
+                  },
+                  notes: '',
+                },
+              ],
+            }
+          : phrase,
+      ),
+    }))
+
+  const handleCandidateChange = (
+    phraseId: string,
+    candId: string,
+    patch: Partial<Candidate>,
+  ) =>
+    mutate((current) => ({
+      ...current,
+      phrases: current.phrases.map((phrase) =>
+        phrase.id === phraseId
+          ? {
+              ...phrase,
+              candidates: phrase.candidates.map((candidate) =>
+                candidate.id === candId ? { ...candidate, ...patch } : candidate,
+              ),
+            }
+          : phrase,
+      ),
+    }))
+
+  const handleCandidateScoreChange = (
+    phraseId: string,
+    candId: string,
+    dim: keyof CandidateScores,
+    value: number | null,
+  ) =>
+    mutate((current) => ({
+      ...current,
+      phrases: current.phrases.map((phrase) =>
+        phrase.id === phraseId
+          ? {
+              ...phrase,
+              candidates: phrase.candidates.map((candidate) =>
+                candidate.id === candId
+                  ? { ...candidate, scores: { ...candidate.scores, [dim]: value } }
+                  : candidate,
+              ),
+            }
+          : phrase,
+      ),
+    }))
+
+  const handleCandidateDelete = (phraseId: string, candId: string) =>
+    mutate((current) => ({
+      ...current,
+      phrases: current.phrases.map((phrase) =>
+        phrase.id === phraseId
+          ? {
+              ...phrase,
+              candidates: phrase.candidates.filter(
+                (candidate) => candidate.id !== candId,
+              ),
+            }
+          : phrase,
+      ),
+    }))
+
+  const handleUseCandidate = (phraseId: string, candId: string) =>
+    mutate((current) => ({
+      ...current,
+      phrases: current.phrases.map((phrase) =>
+        phrase.id === phraseId
+          ? {
+              ...phrase,
+              indonesian:
+                phrase.candidates.find((candidate) => candidate.id === candId)
+                  ?.text ?? phrase.indonesian,
+            }
+          : phrase,
+      ),
+    }))
 
   const handleImportFile = async (file: File) => {
     if (file.size > MAX_AUDIO_BYTES) {
@@ -228,6 +332,26 @@ export function ProjectEditor({
       anchor.click()
       URL.revokeObjectURL(url)
       setNotice('File JSON diunduh')
+    } catch (error) {
+      setActionError(
+        `Gagal mengunduh: ${error instanceof Error ? error.message : String(error)}`,
+      )
+    }
+  }
+
+  const handleExperimentDownload = () => {
+    if (project === null) return
+    try {
+      const blob = new Blob([buildExperimentMarkdown(project)], {
+        type: 'text/markdown;charset=utf-8',
+      })
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = experimentFileName(project.title)
+      anchor.click()
+      URL.revokeObjectURL(url)
+      setNotice('Catatan eksperimen (.md) diunduh')
     } catch (error) {
       setActionError(
         `Gagal mengunduh: ${error instanceof Error ? error.message : String(error)}`,
@@ -345,6 +469,9 @@ export function ProjectEditor({
         <button type="button" onClick={handleDownload}>
           Unduh JSON
         </button>
+        <button type="button" onClick={handleExperimentDownload}>
+          Unduh eksperimen
+        </button>
         <button type="button" onClick={() => void handleManualSave()}>
           Simpan sekarang
         </button>
@@ -369,6 +496,11 @@ export function ProjectEditor({
           onRequestDelete={setConfirmDeletePhraseId}
           onCancelDelete={() => setConfirmDeletePhraseId(null)}
           onConfirmDelete={handleDeletePhrase}
+          onCandidateAdd={handleCandidateAdd}
+          onCandidateChange={handleCandidateChange}
+          onCandidateScoreChange={handleCandidateScoreChange}
+          onCandidateDelete={handleCandidateDelete}
+          onUseCandidate={handleUseCandidate}
         />
       ))}
 

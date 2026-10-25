@@ -3,7 +3,7 @@ import { findActivePhraseId } from './activePhrase'
 import type { Phrase } from './types'
 
 function phrase(id: string, start: number | null, end: number | null): Phrase {
-  return { id, source: '', romanized: '', indonesian: '', start, end, notes: '' }
+  return { id, source: '', romanized: '', indonesian: '', start, end, notes: '', candidates: [] }
 }
 
 describe('findActivePhraseId', () => {

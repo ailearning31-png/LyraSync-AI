@@ -35,6 +35,7 @@ describe('projectRepo (IndexedDB via fake-indexeddb)', () => {
           start: null,
           end: null,
           notes: '',
+          candidates: [],
         },
       ],
       audioName: 'uji.wav',
@@ -57,6 +58,7 @@ describe('projectRepo (IndexedDB via fake-indexeddb)', () => {
       start: null,
       end: null,
       notes: '',
+      candidates: [],
     })
 
     const all = await listProjects()
@@ -93,6 +95,7 @@ describe('projectRepo (IndexedDB via fake-indexeddb)', () => {
       start: null,
       end: null,
       notes: '',
+      candidates: [],
     })
   })
 
