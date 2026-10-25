@@ -31,8 +31,12 @@ Record each manual lyric-adaptation experiment. Do not store copyrighted lyrics 
 
 ---
 
-## EXP-0001 — First experiment not yet run
-- **Status:** Waiting for song and permitted audio reference
+## EXP-0001 — First experiment (The Sun — Chanmina)
+- **Status:** In progress — preparation complete; awaiting the user's manual run
+- **Song / artist:** The Sun — Chanmina (user-owned local copy)
+- **Audio reference:** `The Sun - Chanmina.mp3` — local file, gitignored. Measured via ffprobe (2026-10-25): MP3, 48 kHz, stereo, 212.22 s (≈ 3:32), ~250 kbps.
+- **Procedure:** `EXPERIMENT_WORKSHEET_EXP-0001.md` (step-by-step method, anchored rubric, weighted-score hypothesis, winner rules)
+- **Filled answers:** `local/EXP-0001-ISIAN.md` (gitignored — the GitHub repo is PUBLIC; copyrighted lyrics must never be committed)
 - **Goal:** Determine whether source lyric overlay, phrase duration, and syllable estimates help select more singable Indonesian adaptations.
 - **Method:**
   1. Select one short phrase (initially 2–4 lines).
@@ -42,4 +46,4 @@ Record each manual lyric-adaptation experiment. Do not store copyrighted lyrics 
   5. Score each candidate and note specific mismatches.
   6. Test only the strongest candidate(s) in a music-generation workflow if the user has access and permission.
 - **Important limitation:** Text length and syllable count do not establish melodic fit by themselves. Audio and human listening remain necessary.
-- **Result:** Not run.
+- **Result:** Not run. (Worksheet ready; awaiting the manual run.)

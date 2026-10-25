@@ -103,9 +103,8 @@ A phase is ready to advance when:
 
 ## 9. Current next action
 
-Run Manual Experiment EXP-01:
-- Select one song and a short phrase.
-- Use a permitted audio file and lyrics/romanization the user is allowed to adapt.
-- Compare three Indonesian candidates.
-- Record phrase duration, syllable estimate, stress, naturalness, and audio outcome.
+Run Manual Experiment EXP-0001 (song selected: The Sun — Chanmina; local audio verified 3:32 via ffprobe):
+- Follow `EXPERIMENT_WORKSHEET_EXP-0001.md`; write source lyrics, romaji, and candidates only in `local/` — the GitHub repository is public, so copyrighted lyrics must never be committed.
+- Compare three Indonesian candidates (meaning-first, balanced, singability-first) against the reference audio.
+- Record phrase duration, mora/syllable estimate, stress, naturalness, and audio outcome.
 - Do not code until the manual workflow reveals what the MVP actually needs.

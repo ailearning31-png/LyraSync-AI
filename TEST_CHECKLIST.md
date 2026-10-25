@@ -3,12 +3,12 @@
 Check only tests that were actually performed. Add test IDs and evidence as implementation grows.
 
 ## A. Documentation and project hygiene
-- [ ] `AGENTS.md` is read before code changes.
-- [ ] Current Git status is inspected before editing.
-- [ ] No uncommitted user changes were overwritten.
-- [ ] Revision log updated after meaningful change.
-- [ ] Roadmap updated after phase/status changes.
-- [ ] No secrets or credentials were committed.
+- [x] `AGENTS.md` is read before code changes. (2026-10-25: full doc inspection performed before any change)
+- [x] Current Git status is inspected before editing. (not-a-repo state found first; `status --porcelain` reviewed before each commit)
+- [x] No uncommitted user changes were overwritten. (only new files added; user MP3 untouched)
+- [x] Revision log updated after meaningful change. (REV-0002)
+- [x] Roadmap updated after phase/status changes. (Phase 0 preparation note + task 1)
+- [x] No secrets or credentials were committed. (staged-file review before each commit: only `.md` + `.gitignore`)
 
 ## B. Extension startup and packaging
 - [ ] Extension builds without errors.
@@ -73,4 +73,4 @@ For every bug fix:
 - [ ] If tests are blocked, record the reason and do not claim verified success.
 
 ## Current test status
-No extension code exists in this starter documentation package. All application tests are pending.
+No extension code exists yet. Section A (documentation hygiene) verified 2026-10-25 during Phase 0 preparation. All application tests (sections B–H) remain pending until the extension is built; test IDs will be introduced starting Phase 1.

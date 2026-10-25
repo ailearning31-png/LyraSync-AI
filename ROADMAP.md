@@ -10,8 +10,10 @@ Status meanings:
 ## Phase 0 — Project setup and manual validation
 **Status:** In progress / manual experiment pending
 
+Preparation (2026-10-25): song and permitted local audio selected; repeatable procedure worksheet `EXPERIMENT_WORKSHEET_EXP-0001.md` created (anchored rubric, weighted-score hypothesis, winner rules); Git repository initialized and pushed to `github.com/ailearning31-png/LyraSync-AI`. Lyrics stay in gitignored `local/` because the repo is public.
+
 Tasks:
-- [ ] Choose the first song and a permitted local audio reference.
+- [x] Choose the first song and a permitted local audio reference. ("The Sun — Chanmina", user-owned MP3; ffprobe-verified 212.22 s)
 - [ ] Select a short phrase (2–4 lines).
 - [ ] Capture source lyrics and optional romanization.
 - [ ] Record phrase start/end and audible pauses/held notes.
@@ -133,4 +135,4 @@ Acceptance criteria:
 - Rollback to the last stable version is possible.
 
 ## Next action
-Complete Phase 0 manually. Do not begin advanced audio analysis before the overlay and phrase-level workflow have demonstrated value.
+Run EXP-0001 manually following `EXPERIMENT_WORKSHEET_EXP-0001.md` (song: The Sun — Chanmina). Do not begin coding or advanced audio analysis before Phase 0 is complete and documented.
