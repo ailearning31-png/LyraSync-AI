@@ -39,7 +39,10 @@ export function isCandidateRecord(value: unknown): value is Candidate {
         scoreOk(scores.rhythm) &&
         scoreOk(scores.stress) &&
         scoreOk(scores.singability))) &&
-    (c.notes === undefined || typeof c.notes === 'string')
+    (c.notes === undefined || typeof c.notes === 'string') &&
+    (c.generatedBy === undefined ||
+      c.generatedBy === null ||
+      typeof c.generatedBy === 'string')
   )
 }
 

@@ -25,6 +25,7 @@ function normalizeProject(record: Project): Project {
         ...candidate,
         syllablesOverride: candidate.syllablesOverride ?? null,
         notes: candidate.notes ?? '',
+        generatedBy: candidate.generatedBy ?? null,
         scores: {
           meaning: candidate.scores?.meaning ?? null,
           naturalness: candidate.scores?.naturalness ?? null,

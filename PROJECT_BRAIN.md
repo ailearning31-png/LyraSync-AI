@@ -90,6 +90,7 @@ Record observations separately from scores. Scores are experimental and must be 
 | Original/romanized lyric overlay | Core investigation | Compare text with phrase timing; romanization is not a timing measurement |
 | Automatic audio analysis | Later phase | Must be validated against manual references |
 | AI agent memory and revision guard | Required development process | Documentation + tests + version control |
+| AI integration: BYO configuration (2026-10-25) | Working decision | Provider-agnostic OpenAI-compatible endpoint configured by the user in-app; key only in `chrome.storage.local`, never in source; audio never sent — text only, on explicit button press |
 
 ## 8. Definition of useful progress
 
@@ -103,6 +104,6 @@ A phase is ready to advance when:
 
 ## 9. Current next action
 
-1. **Phase 1–4 built and verified in Chromium** (shell; editor + persistensi; audio + timestamp + overlay; kandidat A/B/C + estimasi suku kata yang dapat dikoreksi + heuristik kepadatan berlabel estimasi + skor manual berbobot + tabel perbandingan + ekspor eksperimen).
-2. **EXP-0001 is still open and must be run** (`EXPERIMENT_WORKSHEET_EXP-0001.md` ready; lyrics only in gitignored `local/` — repo is public). Data nyata kini dibutuhkan ganda: memvalidasi metode DAN mengkalibrasi ambang heuristik (1,25/0,7) serta bobot skor.
-3. **Phase 5 (integrasi AI) membutuhkan keputusan pengguna sebelum coding:** penyedia/model, kebutuhan privasi, dan mekanisme kredensial (backend aman vs konfigurasi pengguna — kunci privat TIDAK boleh masuk kode ekstensi).
+1. **Phase 1–5 built and verified in Chromium** (shell; editor + persistensi; audio + timestamp + overlay; kandidat + heuristik berlabel; integrasi AI BYO-konfigurasi dengan jalur error teruji).
+2. **Pengguna:** isi tab Pengaturan dengan layanan AI pribadi, uji "Buat kandidat (AI)" dengan penyedia nyata (jalur sukses nyata masih BLOCKED menunggu kunci), dan **jalankan EXP-0001** — worksheet siap; datanya mengkalibrasi heuristik & bobot.
+3. Sisa roadmap: Phase 6 (analisis audio otomatis — opsional, ditunda) dan Phase 7 (regresi penuh, rilis, dokumentasi akhir).

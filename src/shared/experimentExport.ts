@@ -61,6 +61,9 @@ export function buildExperimentMarkdown(project: Project): string {
       lines.push('')
       lines.push(`### Kandidat ${slot}`)
       lines.push(`- Teks: ${candidate.text || '(kosong)'}`)
+      if (candidate.generatedBy !== null) {
+        lines.push(`- Dibuat oleh: ${candidate.generatedBy} (AI)`)
+      }
       if (candidate.syllablesOverride !== null) {
         lines.push(`- Suku kata: ${candidate.syllablesOverride} (koreksi manual)`)
       }

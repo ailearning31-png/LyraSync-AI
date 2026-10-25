@@ -1,4 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
+import { applyGeneratedCandidates } from '../../shared/ai/apply'
+import { generateCandidates } from '../../shared/ai/client'
+import { estimateSyllables } from '../../shared/heuristics'
+import { loadAiSettings } from '../../shared/ai/settingsStore'
+import { AiError } from '../../shared/ai/types'
 import { buildExportText, safeFileName } from '../../shared/exportText'
 import {
   buildExperimentMarkdown,
@@ -40,6 +45,9 @@ export function ProjectEditor({
   const [confirmDeletePhraseId, setConfirmDeletePhraseId] = useState<
     string | null
   >(null)
+  const [generatingPhraseId, setGeneratingPhraseId] = useState<string | null>(
+    null,
+  )
 
   const mutate = useCallback(
     (transform: (current: Project) => Project) => {
@@ -189,6 +197,7 @@ export function ProjectEditor({
                     singability: null,
                   },
                   notes: '',
+                  generatedBy: null,
                 },
               ],
             }
@@ -266,6 +275,76 @@ export function ProjectEditor({
           : phrase,
       ),
     }))
+
+  // Satu percobaan per klik (tanpa retry otomatis). Kegagalan tidak pernah
+  // menghapus pekerjaan pengguna — hanya menampilkan pesan.
+  const handleGenerateCandidates = async (phraseId: string) => {
+    if (project === null || generatingPhraseId !== null) return
+    const phrase = project.phrases.find((p) => p.id === phraseId)
+    if (phrase === undefined) return
+    setActionError(null)
+    setNotice(null)
+    setGeneratingPhraseId(phraseId)
+    try {
+      const settings = await loadAiSettings()
+      if (settings === null) {
+        setActionError(
+          'AI belum dikonfigurasi. Buka tab Pengaturan untuk mengisi alamat layanan, kunci API, dan nama model.',
+        )
+        return
+      }
+      const duration =
+        phrase.start !== null && phrase.end !== null && phrase.end > phrase.start
+          ? Math.round((phrase.end - phrase.start) * 10) / 10
+          : null
+      const sourceSyllables =
+        phrase.source.trim() === '' ? null : estimateSyllables(phrase.source).count
+      const generated = await generateCandidates({
+        settings,
+        context: {
+          source: phrase.source,
+          romanized: phrase.romanized,
+          current: phrase.indonesian,
+          start: phrase.start,
+          end: phrase.end,
+          duration,
+          sourceSyllables,
+          notes: phrase.notes,
+        },
+      })
+      let filledTotal = 0
+      mutate((current) => ({
+        ...current,
+        phrases: current.phrases.map((p) => {
+          if (p.id !== phraseId) return p
+          const applied = applyGeneratedCandidates(
+            p.candidates,
+            generated,
+            settings.model,
+          )
+          filledTotal += applied.filled
+          return { ...p, candidates: applied.candidates }
+        }),
+      }))
+      if (filledTotal === 0) {
+        setNotice(
+          'AI menghasilkan kandidat, tetapi semua slot sudah terisi — kosongkan slot yang ingin diganti lalu coba lagi.',
+        )
+      } else {
+        setNotice(
+          `${filledTotal} kandidat AI diterima. Periksa, sunting, dan nilai sebelum dipakai — hasil AI bukan jaminan kecocokan melodi.`,
+        )
+      }
+    } catch (error) {
+      setActionError(
+        error instanceof AiError
+          ? error.message
+          : `Gagal membuat kandidat: ${error instanceof Error ? error.message : String(error)}`,
+      )
+    } finally {
+      setGeneratingPhraseId(null)
+    }
+  }
 
   const handleImportFile = async (file: File) => {
     if (file.size > MAX_AUDIO_BYTES) {
@@ -501,6 +580,8 @@ export function ProjectEditor({
           onCandidateScoreChange={handleCandidateScoreChange}
           onCandidateDelete={handleCandidateDelete}
           onUseCandidate={handleUseCandidate}
+          onGenerateAi={(phraseId) => void handleGenerateCandidates(phraseId)}
+          generatingAi={generatingPhraseId === phrase.id}
         />
       ))}
 

@@ -55,12 +55,12 @@ Check only tests that were actually performed. Add test IDs and evidence as impl
 - [ ] Undo/redo is tested if implemented. (n/a — belum diimplementasi)
 
 ## G. AI/API integration (only if implemented)
-- [ ] API credentials are not embedded in distributable extension code.
-- [ ] Network errors and rate limits are handled.
-- [ ] User is informed before audio/text is sent to an external service.
-- [ ] Model output is validated before being stored.
-- [ ] Retry logic cannot create runaway repeated requests.
-- [ ] Sensitive content is not written to logs.
+- [x] API credentials are not embedded in distributable extension code. (2026-10-25: kunci hanya via UI Pengaturan → `chrome.storage.local`; unit test memastikan pesan error bebas kunci; audit source: tidak ada kunci)
+- [x] Network errors and rate limits are handled. (unit test 401/403/429/5xx/timeout/jaringan; E2E 401 dari server lokal nyata → pesan jelas)
+- [x] User is informed before audio/text is sent to an external service. (panel privasi di tab Pengaturan + tooltip tombol AI; audio tidak pernah dikirim — hanya teks konteks frasa)
+- [x] Model output is validated before being stored. (parser + validator: slot/slot-teks wajib; JSON rusak ditolak — unit test)
+- [x] Retry logic cannot create runaway repeated requests. (satu percobaan per klik, tanpa retry otomatis — by design; tombol dinonaktifkan saat proses berjalan)
+- [x] Sensitive content is not written to logs. (client tidak mencatat body/kunci; pesan error bebas kunci — unit test)
 
 ## H. Regression protocol
 For every bug fix:
@@ -73,4 +73,4 @@ For every bug fix:
 - [ ] If tests are blocked, record the reason and do not claim verified success.
 
 ## Current test status
-2026-10-25 — Phase 0: seksi A. Phase 1–4: `npm run verify` exit 0 — build + tsc + ESLint + **54 unit test** (9 berkas: repo proyek/audio, validasi, waktu, frasa aktif, **heuristik suku kata/kepadatan/skor berbobot**, ekspor lirik & **ekspor eksperimen**, manifest) + **6 E2E Chromium** (smoke, persistensi, hapus dua langkah, audio+overlay, file korup, **alur kandidat lengkap: estimasi→override→skor→bandingkan→terapkan→ekspor .md→persistensi**). Pending: muat manual di Chrome branded, verifikasi visual, skenario penyimpanan penuh, seksi G (AI — Fase 5) & H.
+2026-10-25 — Phase 0: seksi A. Phase 1–5: `npm run verify` exit 0 — build + tsc + ESLint + **74 unit test** (13 berkas, termasuk 5 modul AI: prompt, klien dengan mock fetch, penerapan non-destruktif, penyimpanan konfigurasi) + **7 E2E Chromium** (smoke, persistensi, hapus, audio+overlay, file korup, alur kandidat, **AI: konfigurasi tersimpan + jalur 401 nyata**). Pending: uji ke penyedia AI NYATA (BLOCKED — menunggu kunci pengguna), muat manual Chrome branded, verifikasi visual, skenario penyimpanan penuh, seksi H.

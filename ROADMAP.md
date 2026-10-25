@@ -89,19 +89,19 @@ Acceptance criteria:
 - At least one documented experiment can be recorded in-app or exported. → "Unduh eksperimen" menghasilkan Markdown lengkap per template log (E2E memverifikasi isi file yang benar-benar diunduh) ✓
 
 ## Phase 5 — AI adaptation integration
-**Status:** Not started
+**Status:** Ready for review (2026-10-25) — uji ke penyedia AI nyata menunggu kunci pengguna
 
 Tasks:
-- [ ] Decide model/provider and privacy requirements.
-- [ ] Define structured output for candidate lyrics and rationale.
-- [ ] Add error handling, rate limits, and user controls.
-- [ ] Keep credentials out of extension source.
-- [ ] Test outputs against manually evaluated examples.
+- [x] Decide model/provider and privacy requirements. (KEPUTUSAN: agnostik penyedia — konfigurasi BYO pengguna di tab Pengaturan, endpoint kompatibel OpenAI; kunci hanya di `chrome.storage.local` perangkat, tidak pernah di kode; audio tidak pernah dikirim, hanya teks saat tombol AI ditekan)
+- [x] Define structured output for candidate lyrics and rationale. (skrip prompt meminta JSON `{candidates:[{slot,text,rationale}]}`; parser memvalidasi bentuk — output tidak valid ditolak, bukan disimpan)
+- [x] Add error handling, rate limits, and user controls. (timeout AbortController 30 dtk; pesan ramah 401/403/429/5xx/jaringan/CORS; SATU percobaan per klik — tanpa retry otomatis; tombol "Hapus konfigurasi")
+- [x] Keep credentials out of extension source. (kunci hanya via UI Pengaturan → storage lokal; unit test memastikan pesan error tidak membocorkan kunci)
+- [x] Test outputs against manually evaluated examples. (dengan mock fetch: sukses, code fence, 401/429/5xx/timeout/jaringan, JSON rusak — 74 unit test; uji ke layanan NYATA: BLOCKED menunggu kunci pengguna — jalur 401 diuji end-to-end dengan server lokal sungguhan)
 
 Acceptance criteria:
-- Output is editable and traceable.
-- Errors are recoverable.
-- Evaluation results are recorded rather than assumed.
+- Output is editable and traceable. → kandidat AI mengisi slot kosong (tidak pernah menimpa tulisan pengguna), dilabel "oleh {model}" + rationale di catatan, ikut terekam di ekspor eksperimen ✓
+- Errors are recoverable. → E2E: gagal 401/belum dikonfigurasi → pesan jelas, teks pengguna utuh, tanpa kehilangan data ✓
+- Evaluation results are recorded rather than assumed. → kandidat AI lewat alur penilaian manual yang sama (skor/pengguna/ekspor) ✓
 
 ## Phase 6 — Advanced audio analysis
 **Status:** Not started; optional
@@ -135,6 +135,6 @@ Acceptance criteria:
 - Rollback to the last stable version is possible.
 
 ## Next action
-1. Review Phase 1–4 secara manual di Chrome: load `dist/`, impor audio, tulis kandidat A/B/C, bandingkan, ekspor eksperimen.
-2. **Jalankan EXP-0001** (worksheet siap) — data nyata kini juga jadi bahan kalibrasi ambang heuristik 1,25/0,7 dan bobot skor.
-3. Phase 5 (integrasi AI) membutuhkan keputusan pengguna: penyedia model, privasi, dan cara kredensial (backend vs konfigurasi pengguna) — jangan pakai kunci privat di kode ekstensi. Do not begin advanced audio analysis before the overlay and phrase-level workflow have demonstrated value.
+1. Review Phase 1–5 manual di Chrome: load ulang `dist/` (manifest kini butuh izin storage), isi tab Pengaturan dengan layanan AI Anda, coba "Buat kandidat (AI)", nilai hasilnya.
+2. **Jalankan EXP-0001** (worksheet siap) — kini juga mengkalibrasi ambang heuristik dan bobot skor.
+3. Sisa pekerjaan: Phase 6 (analisis audio otomatis — OPSIONAL, ditunda sampai workflow terbukti bernilai) dan Phase 7 (regresi, rilis, dokumentasi akhir).

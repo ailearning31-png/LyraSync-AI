@@ -1,4 +1,5 @@
 import { chromium, expect, test, type Locator } from '@playwright/test'
+import { createServer, type Server } from 'node:http'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
@@ -343,5 +344,78 @@ test('kandidat: estimasi suku kata, heuristik, skor berbobot, bandingkan, terapk
     await expect(page2.getByLabel('Bahasa Indonesia')).toHaveValue('cinta')
   } finally {
     await context.close()
+  }
+})
+
+// Server HTTP lokal yang selalu menjawab 401 — membuat jalur error AI
+// deterministik (tanpa bergantung pada perilaku port mati sistem operasi).
+async function startUnauthorizedServer(): Promise<{ server: Server; baseUrl: string }> {
+  const server = createServer((req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    if (req.method === 'OPTIONS') {
+      res.statusCode = 204
+      res.end()
+      return
+    }
+    res.statusCode = 401
+    res.setHeader('Content-Type', 'application/json')
+    res.end('{"error":{"message":"invalid key"}}')
+  })
+  await new Promise<void>((resolveListen) => server.listen(0, '127.0.0.1', resolveListen))
+  const address = server.address()
+  const port = typeof address === 'object' && address !== null ? address.port : 0
+  return { server, baseUrl: `http://127.0.0.1:${port}/v1` }
+}
+
+test('AI: pengaturan tersimpan lokal, pesan saat belum dikonfigurasi, dan kegagalan layanan tertangani', async () => {
+  const { server, baseUrl } = await startUnauthorizedServer()
+  const { context, extensionId } = await launchExtension()
+
+  try {
+    const page = await context.newPage()
+    await page.goto(`chrome-extension://${extensionId}/sidepanel.html`)
+
+    // Siapkan proyek + frasa
+    await page.getByLabel('Judul proyek baru').fill('Proyek AI')
+    await page.getByRole('button', { name: 'Buat proyek' }).click()
+    await page.getByRole('button', { name: 'Buka' }).click()
+    await page.getByRole('button', { name: 'Tambah frasa' }).click()
+    await page.getByLabel('Sumber').fill('テスト')
+
+    // 1) Belum dikonfigurasi → pesan jelas, tanpa crash, teks tetap utuh
+    await page.getByRole('button', { name: 'Buat kandidat (AI)' }).click()
+    await expect(
+      page.getByRole('alert').filter({ hasText: 'belum dikonfigurasi' }),
+    ).toBeVisible()
+    await expect(page.getByLabel('Sumber')).toHaveValue('テスト')
+
+    // 2) Konfigurasi di tab Pengaturan — arahkan ke server uji 401
+    await page.getByRole('tab', { name: 'Pengaturan' }).click()
+    await page.getByLabel('Alamat layanan (Base URL)').fill(baseUrl)
+    await page.getByLabel('Kunci API').fill('kunci-uji')
+    await page.getByLabel('Nama model').fill('model-uji')
+    await page.getByRole('button', { name: 'Simpan pengaturan' }).click()
+    await expect(page.getByText('Pengaturan tersimpan')).toBeVisible()
+
+    // 3) Generate → layanan menjawab 401 → pesan jelas, tanpa retry liar
+    await page.getByRole('tab', { name: 'Editor' }).click()
+    await page.getByRole('button', { name: 'Buat kandidat (AI)' }).click()
+    await expect(
+      page.getByRole('alert').filter({ hasText: /Kunci API ditolak|401/ }),
+    ).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByLabel('Sumber')).toHaveValue('テスト')
+
+    // 4) Pengaturan bertahan setelah panel dibuka ulang (tersimpan lokal)
+    await page.close()
+    const page2 = await context.newPage()
+    await page2.goto(`chrome-extension://${extensionId}/sidepanel.html`)
+    await page2.getByRole('tab', { name: 'Pengaturan' }).click()
+    await expect(page2.getByLabel('Alamat layanan (Base URL)')).toHaveValue(baseUrl)
+    await expect(page2.getByLabel('Nama model')).toHaveValue('model-uji')
+  } finally {
+    await context.close()
+    server.close()
   }
 })

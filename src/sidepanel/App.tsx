@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ErrorBanner } from './components/ErrorBanner'
 import { ProjectEditor } from './components/ProjectEditor'
 import { ProjectList } from './components/ProjectList'
+import { SettingsPanel } from './components/SettingsPanel'
 import { TABS, type TabId } from './tabs'
 
 function getExtensionVersion(): string {
@@ -71,12 +72,14 @@ export function App() {
             Fase 4.
           </p>
         )}
+
+        {activeTab === 'settings' && <SettingsPanel />}
       </main>
 
       <ErrorBanner />
 
       <footer className="app-footer">
-        v{version} · Fase 4 — evaluasi kandidat
+        v{version} · Fase 5 — integrasi AI
       </footer>
     </div>
   )

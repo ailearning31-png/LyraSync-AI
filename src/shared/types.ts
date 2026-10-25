@@ -29,6 +29,8 @@ export interface Candidate {
   syllablesOverride: number | null
   scores: CandidateScores
   notes: string
+  /** Nama model yang membuat kandidat ini; null = tulisan manual pengguna. */
+  generatedBy: string | null
 }
 
 export interface Project {

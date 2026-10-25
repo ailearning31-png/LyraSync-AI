@@ -32,15 +32,18 @@ export interface CandidateSectionHandlers {
   ) => void
   onDelete: (candId: string) => void
   onUse: (candId: string) => void
+  onGenerateAi: () => void
 }
 
 export function CandidateSection({
   phrase,
   duration,
+  generating,
   handlers,
 }: {
   phrase: Phrase
   duration: number | null
+  generating: boolean
   handlers: CandidateSectionHandlers
 }) {
   const [showCompare, setShowCompare] = useState(false)
@@ -58,6 +61,14 @@ export function CandidateSection({
             {showCompare ? 'Tutup perbandingan' : 'Bandingkan'}
           </button>
         )}
+        <button
+          type="button"
+          disabled={generating}
+          title="Mengisi slot kandidat yang masih kosong memakai layanan AI dari tab Pengaturan. Teks yang sudah Anda tulis tidak akan ditimpa."
+          onClick={handlers.onGenerateAi}
+        >
+          {generating ? 'Membuat…' : 'Buat kandidat (AI)'}
+        </button>
         <button
           type="button"
           disabled={phrase.candidates.length >= 3}
@@ -135,6 +146,11 @@ function CandidateRow({
       <div className="candidate-header">
         <span className="candidate-slot">{slot}</span>
         <span className="candidate-syllables">{syllableLabel}</span>
+        {candidate.generatedBy !== null && (
+          <span className="candidate-gen" title="Kandidat ini dibuat oleh layanan AI">
+            oleh {candidate.generatedBy}
+          </span>
+        )}
         <span className="candidate-spacer" />
         <button
           type="button"

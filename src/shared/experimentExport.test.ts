@@ -9,6 +9,7 @@ function makeCandidate(overrides: Partial<Candidate> = {}): Candidate {
     syllablesOverride: null,
     scores: { meaning: 3, naturalness: 4, rhythm: 4, stress: 3, singability: 4 },
     notes: '',
+    generatedBy: null,
     ...overrides,
   }
 }
@@ -74,6 +75,26 @@ describe('buildExperimentMarkdown', () => {
     expect(md).toContain('Makna — · Alami — · Ritme — · Stres — · Nyanyi —')
     expect(md).toContain('(koreksi manual)')
     expect(md).toContain('Adaptasi terpilih: (kosong)')
+  })
+
+  it('kandidat buatan AI tercatat sumbernya (traceable)', () => {
+    const project = makeProject({
+      phrases: [
+        {
+          id: 'p1',
+          source: '',
+          romanized: '',
+          indonesian: '',
+          start: null,
+          end: null,
+          notes: '',
+          candidates: [makeCandidate({ generatedBy: 'model-uji', notes: '[AI model-uji] setia makna' })],
+        },
+      ],
+    })
+    const md = buildExperimentMarkdown(project)
+    expect(md).toContain('- Dibuat oleh: model-uji (AI)')
+    expect(md).toContain('[AI model-uji] setia makna')
   })
 
   it('proyek tanpa frasa tetap menghasilkan dokumen valid', () => {

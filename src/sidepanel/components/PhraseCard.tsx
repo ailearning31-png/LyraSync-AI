@@ -36,6 +36,8 @@ export function PhraseCard({
   onCandidateScoreChange,
   onCandidateDelete,
   onUseCandidate,
+  onGenerateAi,
+  generatingAi,
 }: {
   index: number
   phrase: Phrase
@@ -61,6 +63,8 @@ export function PhraseCard({
   ) => void
   onCandidateDelete: (phraseId: string, candId: string) => void
   onUseCandidate: (phraseId: string, candId: string) => void
+  onGenerateAi: (phraseId: string) => void
+  generatingAi: boolean
 }) {
   const duration =
     phrase.start !== null && phrase.end !== null && phrase.end > phrase.start
@@ -74,6 +78,7 @@ export function PhraseCard({
       onCandidateScoreChange(phrase.id, candId, dim, value),
     onDelete: (candId) => onCandidateDelete(phrase.id, candId),
     onUse: (candId) => onUseCandidate(phrase.id, candId),
+    onGenerateAi: () => onGenerateAi(phrase.id),
   }
   return (
     <section className="phrase-card" aria-label={`Frasa ${index + 1}`}>
@@ -166,6 +171,7 @@ export function PhraseCard({
       <CandidateSection
         phrase={phrase}
         duration={duration}
+        generating={generatingAi}
         handlers={candidateHandlers}
       />
     </section>

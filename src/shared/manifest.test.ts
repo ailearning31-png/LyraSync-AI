@@ -10,11 +10,12 @@ describe('manifest MV3', () => {
     expect(manifest.background?.service_worker).toBe('background.js')
     expect(manifest.background?.type).toBe('module')
     expect(manifest.permissions).toContain('sidePanel')
+    expect(manifest.permissions).toContain('storage')
     expect(manifest.action?.default_title).toBeTruthy()
   })
 
   it('hanya meminta izin yang benar-benar diperlukan', () => {
-    const allowed = new Set(['sidePanel'])
+    const allowed = new Set(['sidePanel', 'storage'])
     expect(manifest.permissions.every((p) => allowed.has(p))).toBe(true)
   })
 

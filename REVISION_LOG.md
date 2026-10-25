@@ -156,3 +156,25 @@ Use one entry per bug fix, implementation change, or meaningful revision. Keep o
 - **Known side effects / risks:** Estimasi suku kata tetap heuristik (nama/negara/singkatan bisa meleset — koreksi manual tersedia dan JUSTRU jadi mekanisme utama). Ambang risiko & bobot skor belum terkalibrasi (menunggu data EXP-0001). Regenerasi kandidat otomatis menunggu Fase 5 (AI).
 - **Related entries:** REV-0005 (baseline Phase 3).
 - **Follow-up:** Review manual pengguna; EXP-0001 kini juga menghasilkan data kalibrasi ambang/bobot; coding berikutnya = Phase 5 (integrasi AI) yang MEMBUTUHKAN keputusan pengguna soal penyedia model & cara kredensial.
+
+---
+
+## 2026-10-25 — Phase 5 implementation
+
+### REV-0007 — AI adaptation integration (BYO configuration, non-destructive fill, traceable output)
+- **Date:** 2026-10-25
+- **Status:** Verified
+- **Reported behavior:** Not a bug — implementation task (ROADMAP Phase 5). Dua bug nyata ditemukan E2E selama implementasi (lihat Defect 1–2).
+- **Expected behavior:** Kandidat AI dapat dibuat dari konfigurasi pengguna; output dapat disunting & terlacak; error dapat dipulihkan; kunci tidak pernah di kode sumber (kriteria Phase 5).
+- **Root cause:** n/a — feature work; dua defect terverifikasi di bawah.
+- **Fix or change:** Keputusan arsitektur tercatat di PROJECT_BRAIN §7: agnostik penyedia, endpoint kompatibel OpenAI yang dikonfigurasi pengguna. Modul `src/shared/ai/`: `types` (AiSettings/PhraseContext/GeneratedCandidate/AiError), `prompt` (system+user, instruksi JSON), `client` (satu percobaan, timeout AbortController 30 dtk, pemetaan pesan 401/403/429/5xx/jaringan/CORS, parser output berpaginasi code fence + validasi bentuk — TANPA retry otomatis), `settingsStore` (abstraksi KeyValueStore: chrome.storage.local saat berjalan sebagai ekstensi, memory untuk dev/test), `apply` (pengisian slot NON-DESTRUKTIF — hanya slot kosong, teks pengguna tidak pernah ditimpa). UI: tab Pengaturan (panel privasi + Base URL/Kunci API/Model + hapus konfigurasi), tombol "Buat kandidat (AI)" per frasa, label "oleh {model}" pada kandidat, `Candidate.generatedBy` (validasi toleran + normalisasi) yang ikut terekam di ekspor eksperimen.
+- **Defect 1 (kritis, ditangkap E2E):** `chrome.storage` tidak tersedia karena manifest hanya meminta izin `sidePanel` — konfigurasi AI tercatat di memori sementara dan hilang saat tab berganti (editor membaca konfigurasi kosong). Fix: izin `"storage"` ditambahkan ke manifest; unit test manifest diperbarui (izin tetap minimal: sidePanel+storage).
+- **Defect 2 (kritis, ditangkap E2E):** `isCandidateRecord` menolak `generatedBy: null` (cek hanya `undefined || string`) sehingga autosave proyek berkandidat baru selalu gagal ("Gagal menyimpan"). Fix: null diterima sebagai nilai sah "tulisan manual".
+- **Defect 3:** normalisasi `baseUrl` belum membuang garis miring ujung — dipindah ke validator agar tersimpan kanonik.
+- **Files changed:** `public/manifest.json`, `src/shared/ai/{types,prompt(+test),client(+test),settingsStore(+test),apply(+test)}.ts`, `src/shared/{types,validation}.ts`, `src/shared/storage/projectRepo.ts`, `src/shared/experimentExport.ts` (+test), `src/sidepanel/components/{SettingsPanel,CandidateSection,PhraseCard,ProjectEditor}.tsx`, `tabs.ts`, `App.tsx`, `sidepanel.css`, `e2e/extension.spec.ts` (+server uji 401 lokal), docs.
+- **Tests run:** `npm run verify` → build ✓, tsc ✓, ESLint ✓, Vitest **74/74**, Playwright **7/7**.
+- **Test results:** All PASS, exit 0.
+- **Regression checks:** Seluruh E2E Phase 1–4 tetap lulus setelah perubahan skema & izin.
+- **Known side effects / risks:** **Uji ke penyedia AI nyata BLOCKED** menunggu kunci pengguna — jalur sukses terverifikasi lewat mock fetch, jalur 401 lewat server lokal sungguhan. Untuk LLM lokal (Ollama) pengguna harus mengizinkan CORS (OLLAMA_ORIGINS). Tanpa izin host di manifest — mengandalkan CORS layanan (berlaku untuk penyedia cloud umum).
+- **Related entries:** REV-0006 (baseline Phase 4).
+- **Follow-up:** Pengguna mengisi konfigurasi AI & menguji dengan penyedia nyata; EXP-0001 tetap terbuka; sisa roadmap: Phase 6 (opsional) & Phase 7 (rilis).
