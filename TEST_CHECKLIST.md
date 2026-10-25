@@ -11,12 +11,12 @@ Check only tests that were actually performed. Add test IDs and evidence as impl
 - [x] No secrets or credentials were committed. (staged-file review before each commit: only `.md` + `.gitignore`)
 
 ## B. Extension startup and packaging
-- [ ] Extension builds without errors.
-- [ ] Manifest V3 manifest validates.
-- [ ] Extension loads in Chrome without fatal errors.
-- [ ] Side panel opens and closes correctly.
-- [ ] No unexpected console errors during the core workflow.
-- [ ] Missing permissions or unavailable APIs are handled gracefully.
+- [x] Extension builds without errors. (2026-10-25: `npm run build`, Vite 8, output dist/ dengan nama stabil)
+- [x] Manifest V3 manifest validates. (unit test `src/shared/manifest.test.ts` + dimuat di Chromium E2E)
+- [x] Extension loads in Chrome without fatal errors. (Chromium penuh via Playwright E2E — zero console/page error; muat manual di Chrome branded masih menunggu verifikasi pengguna)
+- [ ] Side panel opens and closes correctly. (halaman panel terverifikasi dirender di E2E; buka/tutup via ikon toolbar belum diuji manual)
+- [x] No unexpected console errors during the core workflow. (E2E meng-assert nol console.error + pageerror)
+- [ ] Missing permissions or unavailable APIs are handled gracefully. (NOT RUN — skenario izin hilang belum diuji)
 
 ## C. Audio import and playback
 - [ ] A supported local audio file can be selected.
@@ -73,4 +73,4 @@ For every bug fix:
 - [ ] If tests are blocked, record the reason and do not claim verified success.
 
 ## Current test status
-No extension code exists yet. Section A (documentation hygiene) verified 2026-10-25 during Phase 0 preparation. All application tests (sections B–H) remain pending until the extension is built; test IDs will be introduced starting Phase 1.
+2026-10-25 — Phase 0: section A verified. Phase 1: build, typecheck, lint, 5 unit test (Vitest), dan 1 E2E smoke di Chromium penuh (Playwright) semuanya PASS via `npm run verify`. Muat manual di Chrome branded dan seksi C–H masih pending (ekstensi belum punya fitur audio/editor/persistence).

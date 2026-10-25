@@ -60,3 +60,26 @@ Use one entry per bug fix, implementation change, or meaningful revision. Keep o
 - **Known side effects / risks:** GitHub repo is PUBLIC — the committed worksheet deliberately contains no lyrics; the user must keep lyrics in `local/` only. LF→CRLF warnings from autocrlf observed (cosmetic). Git identity is repo-local, not global.
 - **Related entries:** REV-0001 (its known risk "Git history … required" is now partially addressed).
 - **Follow-up:** User runs EXP-0001 per the worksheet; then record results in `EXPERIMENT_LOG.md` (this log only for process fixes), evaluate Phase 0 acceptance criteria, and only then plan the Phase 1 extension scaffold.
+
+---
+
+## 2026-10-25 — Phase 1 implementation
+
+### REV-0003 — Minimal extension shell (MV3 + side panel) with automated verification
+- **Date:** 2026-10-25
+- **Status:** Verified
+- **Reported behavior:** Not a bug — implementation task (ROADMAP Phase 1). No extension code existed; user directed work to continue past the pending manual experiment.
+- **Steps to reproduce:** `ls` before change — no `package.json`, no `manifest.json`, no source code.
+- **Expected behavior:** MV3 extension with side panel builds and loads without fatal errors; automated checks exist; decision "manual experiments before coding" visibly superseded, not silently dropped.
+- **Actual behavior:** Extension implemented and all checks green (`npm run verify` exit 0). Supersede decision recorded in `PROJECT_BRAIN.md` §7.
+- **Root cause:** n/a — feature work. Two defects found and fixed during implementation (see below).
+- **Fix or change:** Vite + React 19 + TypeScript scaffold with stable-name multi-entry build (`background.js`, `sidepanel.js`, copied `manifest.json` — manifest must reference stable paths); MV3 manifest with `sidePanel` permission and `openPanelOnActionClick`; minimal Indonesian UI (3 placeholder tabs, error banner from window error/unhandledrejection, version footer); `src/shared/formatDuration.ts` + unit tests; manifest structure/no-extra-permission/no-secrets tests; Playwright E2E loading unpacked extension in full Chromium; ESLint flat config; README with dev/load instructions.
+- **Defect 1 (E2E timeout 60s):** root cause Verified — Playwright's default headless uses the headless shell build, which ignores `--load-extension`, so the service worker never registered. Fix: `channel: 'chromium'` (full build, new headless supports extensions). Evidence: timeout disappeared, test passes in ~1s.
+- **Defect 2 (ESLint error react-hooks/set-state-in-effect in App.tsx):** root cause Verified — version state was set synchronously inside an effect (anti-pattern). Fix: lazy `useState(getExtensionVersion)` initializer; effect removed.
+- **Files changed:** `package.json`, `package-lock.json`, `tsconfig.json`, `vite.config.ts`, `playwright.config.ts`, `eslint.config.js`, `public/manifest.json`, `sidepanel.html`, `src/sidepanel/*`, `src/background/index.ts`, `src/shared/*`, `e2e/extension.spec.ts`, `README.md`, `.gitignore`, plus doc updates (`PROJECT_BRAIN.md`, `ROADMAP.md`, `TEST_CHECKLIST.md`, this log).
+- **Tests run:** `npm run verify` (vite build → tsc --noEmit → eslint → vitest 5/5 → Playwright e2e 1/1) — exit 0, twice (second run after fixes).
+- **Test results:** All PASS. Build output: `dist/{manifest.json, sidepanel.html, sidepanel.js, background.js, assets/}` with stable names. E2E asserts service worker URL, heading/tagline visibility, tab navigation, and zero console/page errors.
+- **Regression checks:** Not applicable — this is the first code baseline; future changes regression-test against it.
+- **Known side effects / risks:** E2E depends on `channel: 'chromium'` — headless shell cannot load extensions (documented in README and spec comment). Manual load in branded Chrome still pending user verification. Extension icons not yet created (default puzzle icon). No persistence/audio/AI yet by design.
+- **Related entries:** REV-0002 (git checkpoint), PROJECT_BRAIN §7 supersede note.
+- **Follow-up:** User: manual Chrome load check (TEST_CHECKLIST B) + EXP-0001 when possible. Next coding phase: Phase 2 editor + persistence.

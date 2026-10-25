@@ -21,3 +21,9 @@ local/
 
 # State tool (ZCode)
 .zcode/
+
+# Artefak tes & tooling
+test-results/
+playwright-report/
+blob-report/
+.eslintcache

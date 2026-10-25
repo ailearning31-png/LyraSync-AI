@@ -85,7 +85,7 @@ Record observations separately from scores. Scores are experimental and must be 
 | Decision | Status | Notes |
 |---|---|---|
 | Product name: LyraSync AI | Working decision | Can change if branding conflict is found |
-| Manual experiments before coding | Required | Validate method first |
+| Manual experiments before coding | Required — superseded 2026-10-25 by user direction | User explicitly directed Phase 1 to proceed in parallel ("lanjut ke step selanjutnya"); EXP-0001 remains open and must still be run — its data calibrates heuristics |
 | Indonesian singable adaptation | Core requirement | Preserve meaning and naturalness |
 | Original/romanized lyric overlay | Core investigation | Compare text with phrase timing; romanization is not a timing measurement |
 | Automatic audio analysis | Later phase | Must be validated against manual references |
@@ -103,8 +103,6 @@ A phase is ready to advance when:
 
 ## 9. Current next action
 
-Run Manual Experiment EXP-0001 (song selected: The Sun — Chanmina; local audio verified 3:32 via ffprobe):
-- Follow `EXPERIMENT_WORKSHEET_EXP-0001.md`; write source lyrics, romaji, and candidates only in `local/` — the GitHub repository is public, so copyrighted lyrics must never be committed.
-- Compare three Indonesian candidates (meaning-first, balanced, singability-first) against the reference audio.
-- Record phrase duration, mora/syllable estimate, stress, naturalness, and audio outcome.
-- Do not code until the manual workflow reveals what the MVP actually needs.
+1. **Phase 1 (extension shell) built and verified in Chromium** (see ROADMAP Phase 1). Manual load in branded Chrome is pending user verification.
+2. **EXP-0001 is still open and must be run** (`EXPERIMENT_WORKSHEET_EXP-0001.md` ready; lyrics only in gitignored `local/` — repo is public). Its data calibrates heuristics even though coding has started.
+3. Next coding phase after Phase 1 review: Phase 2 — manual lyric editor and project persistence.

@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "LyraSync AI",
+  "version": "0.1.0",
+  "description": "Fit the Lyrics. Feel the Melody. Adaptasi lirik ke bahasa Indonesia yang nyaman dinyanyikan mengikuti melodi referensi.",
+  "minimum_chrome_version": "114",
+  "action": {
+    "default_title": "Buka LyraSync AI"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "permissions": ["sidePanel"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
+}

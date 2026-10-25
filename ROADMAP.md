@@ -30,19 +30,19 @@ Acceptance criteria:
 - No coding is required to declare the manual method validated.
 
 ## Phase 1 — Minimal extension shell
-**Status:** Not started
+**Status:** Ready for review (2026-10-25)
 
 Tasks:
-- [ ] Confirm the development environment and preferred stack.
-- [ ] Create a Manifest V3 extension with side panel.
-- [ ] Add basic project shell and navigation.
-- [ ] Add basic automated checks/build script.
-- [ ] Load unpacked extension in Chrome and verify startup.
+- [x] Confirm the development environment and preferred stack. (Node 24.16 + npm 11.13; Vite 8 + React 19 + TypeScript 6 — build green)
+- [x] Create a Manifest V3 extension with side panel. (`public/manifest.json`: side_panel + izin sidePanel; Chromium ≥ 114)
+- [x] Add basic project shell and navigation. (3 tab placeholder berbahasa Indonesia, error banner, footer versi)
+- [x] Add basic automated checks/build script. (`npm run verify` = build + tsc + ESLint + Vitest + Playwright)
+- [x] Load unpacked extension in Chrome and verify startup. (E2E otomatis Chromium PASS; muat manual di Chrome branded menunggu verifikasi pengguna)
 
 Acceptance criteria:
-- Extension builds and loads without fatal errors.
-- A minimal automated/manual smoke test is documented.
-- Git repository and version checkpoint exist.
+- Extension builds and loads without fatal errors. → build ✓; dimuat di Chromium E2E tanpa console/page error ✓
+- A minimal automated/manual smoke test is documented. → `e2e/extension.spec.ts` + README
+- Git repository and version checkpoint exist. → REV-0002/REV-0003
 
 ## Phase 2 — Manual lyric editor and project persistence
 **Status:** Not started
@@ -135,4 +135,6 @@ Acceptance criteria:
 - Rollback to the last stable version is possible.
 
 ## Next action
-Run EXP-0001 manually following `EXPERIMENT_WORKSHEET_EXP-0001.md` (song: The Sun — Chanmina). Do not begin coding or advanced audio analysis before Phase 0 is complete and documented.
+1. Review Phase 1: muat `dist/` secara manual di Chrome (chrome://extensions → Developer mode → Load unpacked) dan pastikan side panel terbuka via ikon toolbar.
+2. Jalankan EXP-0001 saat memungkinkan (worksheet siap) — datanya tetap dibutuhkan untuk kalibrasi heuristik.
+3. Setelah Phase 1 direview: mulai Phase 2 (editor lirik manual + persistensi). Do not begin advanced audio analysis before the overlay and phrase-level workflow have demonstrated value.
