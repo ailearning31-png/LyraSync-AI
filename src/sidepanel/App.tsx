@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { ErrorBanner } from './components/ErrorBanner'
+import { ProjectEditor } from './components/ProjectEditor'
+import { ProjectList } from './components/ProjectList'
 import { TABS, type TabId } from './tabs'
 
 function getExtensionVersion(): string {
@@ -15,9 +17,18 @@ function getExtensionVersion(): string {
 
 export function App() {
   const [activeTab, setActiveTab] = useState<TabId>('projects')
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null)
   const [version] = useState(getExtensionVersion)
 
-  const active = TABS.find((t) => t.id === activeTab)
+  const openProject = (id: string) => {
+    setActiveProjectId(id)
+    setActiveTab('editor')
+  }
+
+  const closeProject = () => {
+    setActiveProjectId(null)
+    setActiveTab('projects')
+  }
 
   return (
     <div className="app">
@@ -42,14 +53,30 @@ export function App() {
       </nav>
 
       <main className="content" role="tabpanel">
-        <h2>{active?.label}</h2>
-        <p>{active?.placeholder}</p>
+        {activeTab === 'projects' && <ProjectList onOpenProject={openProject} />}
+
+        {activeTab === 'editor' &&
+          (activeProjectId !== null ? (
+            <ProjectEditor projectId={activeProjectId} onClose={closeProject} />
+          ) : (
+            <p className="empty-hint">
+              Buka salah satu proyek dari tab <strong>Proyek</strong> untuk
+              mulai mengedit.
+            </p>
+          ))}
+
+        {activeTab === 'experiments' && (
+          <p className="empty-hint">
+            Pembanding kandidat dan catatan eksperimen adaptasi akan hadir di
+            Fase 4.
+          </p>
+        )}
       </main>
 
       <ErrorBanner />
 
       <footer className="app-footer">
-        v{version} · Fase 1 — kerangka ekstensi
+        v{version} · Fase 2 — editor & persistensi
       </footer>
     </div>
   )

@@ -103,6 +103,6 @@ A phase is ready to advance when:
 
 ## 9. Current next action
 
-1. **Phase 1 (extension shell) built and verified in Chromium** (see ROADMAP Phase 1). Manual load in branded Chrome is pending user verification.
-2. **EXP-0001 is still open and must be run** (`EXPERIMENT_WORKSHEET_EXP-0001.md` ready; lyrics only in gitignored `local/` — repo is public). Its data calibrates heuristics even though coding has started.
-3. Next coding phase after Phase 1 review: Phase 2 — manual lyric editor and project persistence.
+1. **Phase 1 & 2 built and verified in Chromium** (shell + editor + IndexedDB persistence; see ROADMAP). Manual load in branded Chrome pending user verification.
+2. **EXP-0001 is still open and must be run** (`EXPERIMENT_WORKSHEET_EXP-0001.md` ready; lyrics only in gitignored `local/` — repo is public). Its data calibrates heuristics.
+3. Next coding phase: Phase 3 — local audio playback, manual phrase timestamps, and overlay.

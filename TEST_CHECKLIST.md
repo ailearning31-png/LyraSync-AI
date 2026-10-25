@@ -27,14 +27,14 @@ Check only tests that were actually performed. Add test IDs and evidence as impl
 - [ ] Audio is not uploaded externally unless clearly disclosed and authorized.
 
 ## D. Lyrics and overlay
-- [ ] Source lyric can be entered and edited.
-- [ ] Romanized text is optional and independently editable.
-- [ ] Indonesian candidates can be edited without altering the source text.
-- [ ] Phrase timestamps can be created and corrected manually.
-- [ ] Overlay remains synchronized when seeking and changing phrases.
-- [ ] Long lines wrap without hiding controls.
-- [ ] Empty and malformed text inputs are handled.
-- [ ] Text timing is not inferred solely from character count.
+- [x] Source lyric can be entered and edited. (2026-10-25: E2E Chromium mengisi kolom Sumber)
+- [x] Romanized text is optional and independently editable. (E2E: kolom Romanisasi terpisah dan bisa kosong)
+- [x] Indonesian candidates can be edited without altering the source text. (E2E meng-assert nilai Sumber tetap utuh setelah mengedit kolom lain)
+- [ ] Phrase timestamps can be created and corrected manually. (Phase 3 — belum ada fitur timing)
+- [ ] Overlay remains synchronized when seeking and changing phrases. (Phase 3)
+- [ ] Long lines wrap without hiding controls. (CSS overflow-wrap dipakai; verifikasi visual manual pending)
+- [x] Empty and malformed text inputs are handled. (frasa boleh kosong; judul kosong ditolak dengan pesan; unit test validasi)
+- [ ] Text timing is not inferred solely from character count. (berlaku mulai Phase 3 saat ada timing)
 
 ## E. Candidate adaptation and scoring
 - [ ] Candidate variants are clearly labeled.
@@ -47,12 +47,12 @@ Check only tests that were actually performed. Add test IDs and evidence as impl
 - [ ] Meaning drift and naturalness can be recorded separately from rhythm.
 
 ## F. Persistence and recovery
-- [ ] Project can be saved.
-- [ ] Saved project can be reopened.
-- [ ] Closing and reopening the extension preserves expected data.
-- [ ] Missing/corrupt saved data produces a recoverable error.
-- [ ] Export/copy works with Unicode and Indonesian characters.
-- [ ] Undo/redo is tested if implemented.
+- [x] Project can be saved. (2026-10-25: autosave + tombol Simpan sekarang; unit test repo IndexedDB via fake-indexeddb)
+- [x] Saved project can be reopened. (E2E Chromium)
+- [x] Closing and reopening the extension preserves expected data. (E2E: halaman panel ditutup lalu dibuka ulang pada profil yang sama — ketiga teks utuh)
+- [x] Missing/corrupt saved data produces a recoverable error. (unit test: record korup dilewati, proyek sehat tetap tampil; getProject korup → null)
+- [x] Export/copy works with Unicode and Indonesian characters. (unit test buildExportText; clipboard manual pending)
+- [ ] Undo/redo is tested if implemented. (n/a — belum diimplementasi)
 
 ## G. AI/API integration (only if implemented)
 - [ ] API credentials are not embedded in distributable extension code.
@@ -73,4 +73,4 @@ For every bug fix:
 - [ ] If tests are blocked, record the reason and do not claim verified success.
 
 ## Current test status
-2026-10-25 — Phase 0: section A verified. Phase 1: build, typecheck, lint, 5 unit test (Vitest), dan 1 E2E smoke di Chromium penuh (Playwright) semuanya PASS via `npm run verify`. Muat manual di Chrome branded dan seksi C–H masih pending (ekstensi belum punya fitur audio/editor/persistence).
+2026-10-25 — Phase 0: seksi A verified. Phase 1: build, typecheck, lint, unit test, E2E smoke Chromium PASS. Phase 2: `npm run verify` exit 0 — build + tsc + ESLint + **20 unit test** (repo IndexedDB via fake-indexeddb, validasi, ekspor, manifest) + **3 E2E Chromium** (smoke, persistensi lintas buka-tutup panel, hapus dua langkah). Pending: muat manual di Chrome branded, buka/tutup panel via toolbar, verifikasi visual baris panjang, seksi C/E/G/H (fiturnya belum ada atau belum diuji manual).

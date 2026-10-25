@@ -104,6 +104,234 @@ body {
   color: var(--muted);
 }
 
+.empty-hint {
+  padding: 6px 0;
+}
+
+/* --- Form & tombol --- */
+button {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--accent);
+}
+
+button.danger {
+  color: #b3413f;
+  border-color: var(--error-border);
+}
+
+button.link {
+  border: none;
+  background: transparent;
+  padding: 3px 6px;
+  color: var(--muted);
+  text-decoration: underline;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type='text'],
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 7px 9px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid var(--accent-soft);
+  border-color: var(--accent);
+}
+
+label {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.create-form {
+  margin-bottom: 16px;
+}
+
+.create-form .row {
+  display: flex;
+  gap: 8px;
+}
+
+.create-form input {
+  flex: 1;
+}
+
+/* --- Daftar proyek --- */
+.project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.project-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.project-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.project-meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.project-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* --- Editor --- */
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.save-status {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.save-saved {
+  color: #2e7d32;
+}
+
+.save-error {
+  color: #b3413f;
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  button.danger,
+  .save-error {
+    color: #e08a88;
+  }
+
+  .save-saved {
+    color: #7fc97f;
+  }
+}
+
+.editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.phrase-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+
+.phrase-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.phrase-index {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.phrase-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.phrase-field {
+  margin-bottom: 8px;
+}
+
+.phrase-field:last-child {
+  margin-bottom: 0;
+}
+
+.add-phrase {
+  width: 100%;
+  border-style: dashed;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.notice button {
+  border: none;
+  background: transparent;
+  padding: 2px 6px;
+}
+
 .error-banner {
   display: flex;
   align-items: center;

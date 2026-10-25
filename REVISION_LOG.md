@@ -83,3 +83,28 @@ Use one entry per bug fix, implementation change, or meaningful revision. Keep o
 - **Known side effects / risks:** E2E depends on `channel: 'chromium'` — headless shell cannot load extensions (documented in README and spec comment). Manual load in branded Chrome still pending user verification. Extension icons not yet created (default puzzle icon). No persistence/audio/AI yet by design.
 - **Related entries:** REV-0002 (git checkpoint), PROJECT_BRAIN §7 supersede note.
 - **Follow-up:** User: manual Chrome load check (TEST_CHECKLIST B) + EXP-0001 when possible. Next coding phase: Phase 2 editor + persistence.
+
+---
+
+## 2026-10-25 — Phase 2 implementation
+
+### REV-0004 — Manual lyric editor and project persistence (IndexedDB)
+- **Date:** 2026-10-25
+- **Status:** Verified
+- **Reported behavior:** Not a bug — implementation task (ROADMAP Phase 2). Editor/persistence did not exist.
+- **Steps to reproduce:** Before change: only placeholder tabs; no storage.
+- **Expected behavior:** Projects/phrases can be created and edited; source/romanized/Indonesian fields independent; data survives closing/reopening; export/copy and basic validation exist (Phase 2 criteria).
+- **Actual behavior:** All criteria verified by automated tests (unit + Chromium E2E).
+- **Root cause:** n/a — feature work. Defects found during implementation listed below.
+- **Fix or change:** Data layer `src/shared/{types,validation,exportText}.ts` + `src/shared/storage/{db,projectRepo}.ts` (dependency-free IndexedDB wrapper; corrupt records skipped on read, invalid saves rejected); UI `ProjectList` (create, two-step delete, open), `ProjectEditor` (title rename, add/remove phrase, three independent textareas, copy-formatted-lyrics, download JSON, manual save), `PhraseCard`, hook `useAutoSave` (debounce 400 ms, flush on tab switch and pagehide so closing the panel does not lose the last edits); App wiring; CSS.
+- **Defect 1 (TS6133):** unused `deleteProject` import in ProjectEditor — removed (deletion lives in the list view).
+- **Defect 2 (ESLint react-hooks/set-state-in-effect in ProjectList):** calling a setState-bearing callback directly in an effect body. Fix: self-contained async IIFE with `cancelled` guard; list refresh via `reloadKey` state.
+- **Defect 3 (ESLint react-hooks/refs in useAutoSave):** ref written during render (`latest.current = project`). Fix: mirror value in an effect, per React docs.
+- **Defect 4 (unit test safeFileName):** original expectation encoded worse behavior (`Lagu__Baru_1_.json`, `_.json`). Implementation improved (collapse invalid runs to one `_`, strip edge underscores, fallback `proyek.json`) and expectations updated — documented here as a deliberate test change, not test-fudging.
+- **Files changed:** `src/shared/types.ts`, `src/shared/validation.ts`, `src/shared/exportText.ts` (+test), `src/shared/storage/db.ts`, `src/shared/storage/projectRepo.ts` (+test), `src/sidepanel/hooks/useAutoSave.ts`, `src/sidepanel/components/{ProjectList,ProjectEditor,PhraseCard}.tsx`, `src/sidepanel/{App.tsx,tabs.ts,sidepanel.css}`, `e2e/extension.spec.ts`, `package.json` (+fake-indexeddb devDep), docs (`ROADMAP.md`, `TEST_CHECKLIST.md`, `PROJECT_BRAIN.md`, `README.md`, this log).
+- **Tests run:** `npm run verify` → build ✓, tsc ✓, ESLint ✓, Vitest **20/20** (repo roundtrip, corrupt-record skip, invalid-save rejection, export text, safeFileName, manifest, formatDuration), Playwright **3/3** (smoke; create→edit→autosave→close panel→reopen→data intact; two-step delete).
+- **Test results:** All PASS, exit 0.
+- **Regression checks:** Phase 1 smoke E2E still passing after UI restructure (updated to assert the new Projects form).
+- **Known side effects / risks:** Clipboard copy not asserted in E2E (headless clipboard permissions) — covered by pure-function unit test + manual checklist. Autosave debounce means a panel closed within 400 ms relies on the pagehide flush; edge case documented. No phrase timestamps yet (Phase 3).
+- **Related entries:** REV-0003 (Phase 1 baseline this builds on).
+- **Follow-up:** User manual review in Chrome; EXP-0001 remains open; next coding phase = Phase 3 (audio playback + timestamps + overlay).

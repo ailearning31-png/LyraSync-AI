@@ -45,18 +45,18 @@ Acceptance criteria:
 - Git repository and version checkpoint exist. → REV-0002/REV-0003
 
 ## Phase 2 — Manual lyric editor and project persistence
-**Status:** Not started
+**Status:** Ready for review (2026-10-25)
 
 Tasks:
-- [ ] Create/edit projects and phrases.
-- [ ] Enter source, romanized, and Indonesian text separately.
-- [ ] Save and reopen projects locally.
-- [ ] Add export/copy and basic validation.
+- [x] Create/edit projects and phrases. (buat dari daftar, hapus dengan konfirmasi dua langkah, judul dapat diubah; tambah/hapus frasa per proyek)
+- [x] Enter source, romanized, and Indonesian text separately. (tiga textarea independen per frasa)
+- [x] Save and reopen projects locally. (IndexedDB; autosave debounce 400 ms + flush saat pindah tab atau panel disembunyikan; indikator status tersimpan/gagal)
+- [x] Add export/copy and basic validation. (salin lirik berformat seksi, unduh JSON, judul kosong ditolak, record korup dilewati tanpa menggagalkan daftar)
 
 Acceptance criteria:
-- Core editing workflow survives closing/reopening.
-- Text fields remain independent.
-- Regression checklist passes.
+- Core editing workflow survives closing/reopening. → E2E Chromium: buat → edit → autosave → tutup halaman panel → buka ulang → ketiga teks utuh ✓
+- Text fields remain independent. → E2E meng-assert ketiga kolom tetap terpisah saat diedit ✓
+- Regression checklist passes. → `npm run verify` exit 0: build + tsc + ESLint + 20 unit test + 3 E2E ✓
 
 ## Phase 3 — Local audio playback and overlay timeline
 **Status:** Not started
@@ -135,6 +135,6 @@ Acceptance criteria:
 - Rollback to the last stable version is possible.
 
 ## Next action
-1. Review Phase 1: muat `dist/` secara manual di Chrome (chrome://extensions → Developer mode → Load unpacked) dan pastikan side panel terbuka via ikon toolbar.
+1. Review Phase 1–2: muat `dist/` manual di Chrome (chrome://extensions → Developer mode → Load unpacked), buat proyek, tulis beberapa frasa, tutup-buka panel, pastikan data bertahan.
 2. Jalankan EXP-0001 saat memungkinkan (worksheet siap) — datanya tetap dibutuhkan untuk kalibrasi heuristik.
-3. Setelah Phase 1 direview: mulai Phase 2 (editor lirik manual + persistensi). Do not begin advanced audio analysis before the overlay and phrase-level workflow have demonstrated value.
+3. Setelah review: mulai Phase 3 (impor & pemutaran audio lokal + timestamp frasa + overlay). Do not begin advanced audio analysis before the overlay and phrase-level workflow have demonstrated value.
