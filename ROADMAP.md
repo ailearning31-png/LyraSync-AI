@@ -104,7 +104,7 @@ Acceptance criteria:
 - Evaluation results are recorded rather than assumed. → kandidat AI lewat alur penilaian manual yang sama (skor/pengguna/ekspor) ✓
 
 ## Phase 6 — Advanced audio analysis
-**Status:** Ready for review — MVP analisis energi (2026-10-25); lagu nyata menunggu EXP-0001
+**Status:** Fitur OPSIONAL — MVP energi selesai & teruji; analisis lanjutan DITUNDA sampai workflow utama terbukti bermanfaat (lihat keputusan eksplorasi di bawah)
 
 Tasks:
 - [x] Estimate beat/onset and phrase boundaries. (onset = awal segmen suara; batas frasa disarankan dari jeda ≥ 0,25 dtk berbasis envelope RMS 50 ms/25 ms — sederhana & dapat dijelaskan; estimasi tempo/beat penuh DITUNDA sampai data EXP-0001 menunjukkan kebutuhan)
@@ -119,22 +119,22 @@ Acceptance criteria:
 - Performance and licensing implications are documented. → 100% lokal via Web Audio API (tanpa lisensi/tanpa jaringan); decode via OfflineAudioContext (andalkan di headless); komputasi O(n) sesuai permintaan; Essentia.js sengaja dihindari (ukuran/lisensi).
 
 ## Phase 7 — Regression, release, and ongoing maintenance
-**Status:** Not started
+**Status:** Ready for review — beta audit 2026-10-25 (rilis penuh menunggu EXP-0001)
 
 Tasks:
-- [ ] Run the complete applicable test checklist.
-- [ ] Review privacy, permissions, and external-service terms.
-- [ ] Document installation and known limitations.
-- [ ] Tag a stable version in Git.
-- [ ] Update docs for every release.
-- [ ] Review dependency/security updates deliberately, not blindly.
+- [x] Run the complete applicable test checklist. (`npm run verify` exit 0: build+tsc+ESLint+80 unit+8 E2E; `npm audit` 0 kerentanan; checklist bagian A–G tercentang dengan bukti di `TEST_CHECKLIST.md`)
+- [x] Review privacy, permissions, and external-service terms. (izin minimal `sidePanel`+`storage`, TANPA host_permissions; satu titik jaringan: `src/shared/ai/client.ts:80`, hanya teks, hanya saat tombol AI ditekan; audio/lyrics lokal; tanpa rahasia di repo — grep audit + tanpa .env; kepatuhan ToS penyedia AI menjadi tanggung jawab pengguna — tercatat di README)
+- [x] Document installation and known limitations. (README: instalasi, penggunaan, batasan, known issues, rilis & rollback)
+- [x] Tag a stable version in Git. (`v0.1.0-beta.1` — tag pra-rilis; BUKAN klaim siap produksi karena EXP-0001 dan uji AI nyata masih terbuka)
+- [x] Update docs for every release. (dokumen diperbarui pada setiap fase; entri REV-0009 mencatat rilis beta)
+- [x] Review dependency/security updates deliberately, not blindly. (npm audit 0; versi terkunci di package-lock; kebijakan: tinjau manual sebelum upgrade, tidak ada auto-update)
 
 Acceptance criteria:
-- Release can be reproduced.
-- Known issues are documented.
-- Rollback to the last stable version is possible.
+- Release can be reproduced. → dari tag: `npm ci && npm run verify && npm run build` (terdokumentasi di README)
+- Known issues are documented. → README bagian "Known issues"
+- Rollback to the last stable version is possible. → tag Git + instruksi checkout di README
 
 ## Next action
-1. Review Phase 1–6 manual di Chrome (muat ulang `dist/`): impor `The Sun - Chanmina.mp3`, coba "Analisis jeda (estimasi)", verifikasi saran dengan telinga, set timestamp.
-2. **Jalankan EXP-0001** — worksheet siap; ukur juga akurasi saran jeda pada lagu nyata (bandingkan dengan anotasi manual Anda) sebagai kelanjutan kriteria Phase 6.
-3. Phase 7 — regresi penuh, tinjauan privasi/izin, dokumentasi rilis, tag versi stabil di Git.
+1. **Pengguna jalankan EXP-0001** (worksheet + langkah siap; lihat `EXPERIMENT_LOG.md` EXP-0001): satu frasa pendek, konfigurasi AI pribadi, nyanyikan kandidat, catat hasil.
+2. Setelah data EXP-0001 masuk: kalibrasi ambang heuristik & bobot skor, evaluasi kebutuhan analisis lanjutan (Phase 6 lanjutan tetap ditunda).
+3. Kriteria rilis penuh (bukan beta): EXP-0001 tervalidasi + uji AI penyedia nyata + review manual Chrome branded.

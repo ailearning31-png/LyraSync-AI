@@ -104,6 +104,6 @@ A phase is ready to advance when:
 
 ## 9. Current next action
 
-1. **Phase 1–6 built and verified in Chromium** (shell; editor + persistensi; audio + timestamp + overlay; kandidat + heuristik; AI BYO; analisis jeda energi berlabel estimasi dengan akurasi terukur pada sinyal sintetis).
-2. **Pengguna:** uji di Chrome — muat ulang `dist/`, coba "Analisis jeda (estimasi)" pada lagu nyata, isi Pengaturan AI bila mau, dan **jalankan EXP-0001** (worksheet siap; kini juga mengukur akurasi saran jeda pada musik nyata).
-3. Sisa roadmap: **Phase 7** — regresi penuh, tinjauan privasi/izin, dokumentasi rilis, tag versi stabil.
+1. **Phase 1–7 (beta) built, audited, and tagged `v0.1.0-beta.1`** (2026-10-25): regresi penuh lulus, privasi/izin/keamanan teraudit bersih, rilis dapat direproduksi & di-rollback. Tag beta ≠ siap produksi.
+2. **Pengguna jalankan EXP-0001 sekarang** — satu frasa pendek dari "The Sun", konfigurasi AI pribadi di tab Pengaturan, tekan "Buat kandidat (AI)", nyanyikan tiap kandidat, isi `local/EXP-0001-ISIAN.md` (worksheet lengkap tersedia). Hasil: kalibrasi heuristik + validasi metode.
+3. Kriteria naik dari beta ke rilis penuh: EXP-0001 tervalidasi + uji AI penyedia nyata + review manual Chrome branded. Phase 6 lanjutan (separation/pitch/alignment/tempo) tetap ditunda sampai workflow utama terbukti.

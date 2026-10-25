@@ -200,3 +200,29 @@ Use one entry per bug fix, implementation change, or meaningful revision. Keep o
 - **Known side effects / risks:** **Akurasi pada musik nyata belum diukur** (butuh anotasi manual pengguna — kelanjutan EXP-0001). Ambang 5%/250 ms default bisa salah pada musik dengan bagian pelan — panel sudah memperingatkan. Beat/tempo penuh belum ada.
 - **Related entries:** REV-0007 (baseline Phase 5).
 - **Follow-up:** Pengguna menguji analisis pada lagu nyata + mencatat akurasinya (EXP-0001); sisa roadmap: Phase 7 (regresi penuh, rilis).
+
+---
+
+## 2026-10-25 — Phase 7 audit
+
+### REV-0009 — Phase 7 audit: full regression, privacy/permissions review, security audit, beta tag
+- **Date:** 2026-10-25
+- **Status:** Verified
+- **Reported behavior:** Not a bug — audit & kesiapan rilis (ROADMAP Phase 7), atas permintaan pengguna, tanpa refactor dan tanpa mengulang pekerjaan selesai.
+- **Expected behavior:** Seluruh regresi lulus; privasi/izin/keamanan teraudit dan terdokumentasi; rilis dapat direproduksi & di-rollback; known issues tertulis.
+- **Actual behavior:** Audit bersih — TIDAK ada bug yang ditemukan, TIDAK ada perubahan kode.
+- **Audit results (bukti):**
+  - `npm run verify` exit 0: build Vite + `tsc --noEmit` + ESLint + **80/80 unit test** + **8/8 E2E Chromium** (jalankan ulang penuh untuk audit ini).
+  - `npm audit`: **0 vulnerabilities**.
+  - Grep pola kunci rahasia (`sk-…`, `AIza…`, assignment kunci): **tidak ada**; tidak ada file `.env`.
+  - Izin manifest: `["sidePanel", "storage"]` saja; **0 host_permissions**.
+  - Titik jaringan di seluruh source: **tepat satu** — `src/shared/ai/client.ts:80` (klien AI; hanya teks konteks frasa, hanya saat tombol AI ditekan; audio tidak pernah dikirim).
+  - Fitur inti terverifikasi E2E: startup (tes 1), penyimpanan proyek & autosave (tes 2), penghapusan terkonfirmasi (tes 3), audio+timestamp+overlay (tes 4), error file korup (tes 5), kandidat+heuristik+ekspor (tes 6), pengaturan AI+jalur 401 (tes 7), analisis jeda (tes 8).
+- **Kesiapan EXP-0001 (6 langkah pengguna):** semua didukung — bukti di `EXPERIMENT_LOG.md` EXP-0001. Jalur sukses AI dengan penyedia nyata tetap **belum diuji** (butuh kunci pengguna).
+- **Fix or change:** Tidak ada perubahan kode. Dokumentasi: ROADMAP Phase 7 & Phase 6 (diperjelas sebagai fitur opsional), README (bagian rilis & rollback + known issues), EXPERIMENT_LOG (kesiapan EXP-0001), TEST_CHECKLIST (seksi H), entri ini.
+- **Release:** tag **`v0.1.0-beta.1`** (pra-rilis) pada commit dokumentasi ini — reproduksi: `npm ci && npm run verify && npm run build`; rollback: `git checkout v0.1.0-beta.1`. Tag beta BUKAN klaim siap produksi: EXP-0001 dan uji AI nyata masih terbuka.
+- **Tests run:** lihat Audit results di atas.
+- **Test results:** All PASS; audit keamanan bersih.
+- **Known issues (tetap terbuka):** EXP-0001 belum dijalankan; uji AI penyedia nyata BLOCKED (kunci pengguna); akurasi analisis jeda di lagu nyata belum diukur; muat manual Chrome branded belum diverifikasi pengguna; verifikasi visual baris panjang & skenario penyimpanan penuh belum diuji.
+- **Related entries:** REV-0008 (baseline Phase 6).
+- **Follow-up:** Pengguna menjalankan EXP-0001 → kalibrasi → kriteria rilis penuh.

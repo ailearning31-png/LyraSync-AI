@@ -64,13 +64,13 @@ Check only tests that were actually performed. Add test IDs and evidence as impl
 
 ## H. Regression protocol
 For every bug fix:
-- [ ] Reproduce the old bug before fixing, when possible.
-- [ ] Add a regression test or a repeatable manual test.
-- [ ] Run the relevant feature tests.
-- [ ] Run tests for neighboring features that could be affected.
-- [ ] Compare behavior against the previous stable version.
-- [ ] Record exact pass/fail results in `REVISION_LOG.md`.
-- [ ] If tests are blocked, record the reason and do not claim verified success.
+- [x] Reproduce the old bug before fixing, when possible. (2026-10-25: REV-0003–REV-0008 — setiap defect direproduksi via tes yang gagal sebelum diperbaiki)
+- [x] Add a regression test or a repeatable manual test. (setiap perbaikan disertai/tercakup unit atau E2E; suite 8 E2E + 80 unit dapat diulang via `npm run verify`)
+- [x] Run the relevant feature tests. (setiap REV mencatat rerun)
+- [x] Run tests for neighboring features that could be affected. (verify penuh dijalankan tiap fase)
+- [x] Compare behavior against the previous stable version. (E2E fase sebelumnya tetap lulus setelah tiap perubahan skema)
+- [x] Record exact pass/fail results in `REVISION_LOG.md`. (REV-0002 s.d. REV-0009)
+- [x] If tests are blocked, record the reason and do not claim verified success. (uji AI nyata & EXP-0001 tercatat BLOCKED/belum diuji — tidak pernah diklaim lulus)
 
 ## Current test status
-2026-10-25 — Phase 0: seksi A. Phase 1–6: `npm run verify` exit 0 — build + tsc + ESLint + **80 unit test** (14 berkas, termasuk **akurasi deteksi jeda < 100 ms vs sinyal sintetis berbatas diketahui**) + **8 E2E Chromium** (smoke, persistensi, hapus, audio+overlay, file korup, alur kandidat, AI 401, **analisis jeda end-to-end**). Pending: akurasi analisis pada lagu nyata (EXP-0001), uji penyedia AI nyata (kunci pengguna), muat manual Chrome branded, verifikasi visual, seksi H.
+2026-10-25 — **Audit Phase 7 (REV-0009)**: `npm run verify` exit 0 (build+tsc+ESLint+**80 unit**+**8 E2E Chromium**), `npm audit` 0 kerentanan, grep rahasia bersih, izin minimal tanpa host_permissions, satu titik jaringan (klien AI). Tag **v0.1.0-beta.1** (pra-rilis). **Belum diuji / BLOCKED:** EXP-0001 (menunggu pengguna), uji AI penyedia nyata (kunci), muat manual Chrome branded, verifikasi visual, skenario penyimpanan penuh, akurasi analisis di lagu nyata.

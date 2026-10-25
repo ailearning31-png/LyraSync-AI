@@ -61,6 +61,25 @@ Catatan: butuh Chrome/Chromium ≥ 114 (`minimum_chrome_version` di manifest).
 - Ambang heuristik (risiko kepadatan, bobot skor) masih hipotesis menunggu kalibrasi.
 - Tidak ada undo/redo atau ikon ekstensi; E2E memakai Chromium — muat manual di Chrome branded dianjurkan.
 
-## Privasi
+## Rilis & rollback
 
-Fase 1 tidak mengirimkan data apa pun ke layanan eksternal; satu-satunya izin adalah `sidePanel`. Audio dan lirik pribadi tidak pernah masuk git (`local/` dan `*.mp3` di `.gitignore`).
+- Rilis beta saat ini: tag **`v0.1.0-beta.1`** (pra-rilis — bukan klaim siap produksi; lihat Known issues).
+- **Reproduksi rilis** dari tag mana pun: `git checkout <tag> && npm ci && npm run verify && npm run build` → hasil di `dist/`.
+- **Rollback**: `git checkout v0.1.0-beta.1` (atau tag sebelumnya), lalu build ulang. Riwayat lengkap ada di `REVISION_LOG.md`.
+
+## Known issues (per v0.1.0-beta.1)
+
+1. **EXP-0001 belum dijalankan** — metode adaptasi belum divalidasi dengan data nyata; ambang heuristik & bobot skor masih hipotesis.
+2. **Uji AI ke penyedia nyata belum dilakukan** (butuh kunci pengguna); jalur sukses terverifikasi lewat mock, jalur 401 via server uji lokal.
+3. Tidak ada mode AI tanpa kunci: minimal perlu Base URL + kunci + model (Ollama lokal gratis tapi tetap isi placeholder di kolom kunci + atur `OLLAMA_ORIGINS`).
+4. Akurasi analisis jeda terukur hanya pada sinyal sintetis (< 100 ms); musik nyata bisa salah deteksi (bagian pelan ≠ jeda).
+5. Muat manual di Chrome branded belum diverifikasi pengguna (E2E memakai Chromium).
+6. Verifikasi visual baris panjang dan skenario penyimpanan penuh belum diuji.
+7. Tidak ada undo/redo; ikon ekstensi masih default.
+
+## Privasi & keamanan
+
+- Izin ekstensi minimal: `sidePanel` + `storage`; **tanpa host_permissions** (diaudit 2026-10-25).
+- Satu-satunya panggilan jaringan: klien AI (`src/shared/ai/client.ts`) — hanya **teks** konteks frasa, hanya saat Anda menekan "Buat kandidat (AI)"; **audio tidak pernah dikirim**.
+- Kunci API hanya di `chrome.storage.local` perangkat Anda; tidak ada rahasia di repo (diaudit, `npm audit` 0 kerentanan); kepatuhan terhadap ketentuan layanan penyedia AI menjadi tanggung jawab pengguna.
+- Lirik & proyek tersimpan lokal (IndexedDB); lirik berhak cipta tidak pernah masuk Git (`local/` dan media di-ignore).
