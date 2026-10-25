@@ -108,3 +108,29 @@ Use one entry per bug fix, implementation change, or meaningful revision. Keep o
 - **Known side effects / risks:** Clipboard copy not asserted in E2E (headless clipboard permissions) — covered by pure-function unit test + manual checklist. Autosave debounce means a panel closed within 400 ms relies on the pagehide flush; edge case documented. No phrase timestamps yet (Phase 3).
 - **Related entries:** REV-0003 (Phase 1 baseline this builds on).
 - **Follow-up:** User manual review in Chrome; EXP-0001 remains open; next coding phase = Phase 3 (audio playback + timestamps + overlay).
+
+---
+
+## 2026-10-25 — Phase 3 implementation
+
+### REV-0005 — Local audio playback, manual phrase timestamps, synchronized overlay
+- **Date:** 2026-10-25
+- **Status:** Verified
+- **Reported behavior:** Not a bug — implementation task (ROADMAP Phase 3). No audio/timing/overlay existed.
+- **Steps to reproduce:** Before change: editor tanpa audio dan tanpa waktu.
+- **Expected behavior:** Impor audio lokal, playback/seek/durasi, timestamp frasa manual yang dapat dikoreksi, overlay tiga teks mengikuti posisi audio; audio & teks tetap lokal (kriteria Phase 3).
+- **Actual behavior:** Semua kriteria terverifikasi otomatis (unit + E2E Chromium).
+- **Root cause:** n/a — feature work. Defects found during implementation listed below.
+- **Fix or change:** DB v2 dengan store `audio` (ArrayBuffer, bukan Blob langsung, demi kompatibilitas structured clone; blob dibangun ulang saat dibaca); `audioRepo` (batas MAX_AUDIO_BYTES 100 MB); tipe Phrase + `start/end/notes` dan Project + `audioName/audioDuration` dengan validasi toleran terhadap record lama + normalisasi di projectRepo (migrasi tanpa putus); `timeFormat` (formatTimestamp/parseTimeInput m:ss.d, presisi sepersepuluh) dan `findActivePhraseId` (end terbuka, overlap → start terbesar menang) beserta unit test; hook `useAudioPlayer` (satu elemen Audio seumur hidup hook — mencegah playback ganda; object URL di-revoke; callback durasi dipanggil dari event handler); komponen `AudioControls` (impor file, putar/jeda, slider seek, waktu/durasi), `Overlay` (frasa aktif `aria-current` + auto-scroll + klik melompat), `TimeField` (parse on blur; invalid → kembali aman; remount via key saat nilai berubah dari luar), `PhraseCard` (baris timing + Set dari pemutar + catatan); ProjectEditor mengintegrasikan semuanya; footer versi Fase 3.
+- **Defect 1 (TS2322 ×2):** fixture `makeProject` di dua test tidak memenuhi field Project baru — base fixture dilengkapi `audioName/audioDuration: null`.
+- **Defect 2 (TS6133):** impor `useState` tak terpakai di PhraseCard setelah TimeField dipisah — dihapus.
+- **Defect 3 (TS2345):** literal proyek baru di ProjectList kurang field audio — dilengkapi.
+- **Defect 4 (ESLint exhaustive-deps):** effect memakai objek `player` yang tidak stabil — destrukturisasi `loadBlob` (stabil) sebagai dependency.
+- **Defect 5 (E2E "Malformed value"):** Playwright `fill()` tidak mendukung `input[type=range]` — diganti helper `seekSlider` berbasis native value setter + dispatch `input` event (pola standar React).
+- **Files changed:** `src/shared/{types,validation,timeFormat(+test),activePhrase(+test)}.ts`, `src/shared/storage/{db,audioRepo(+test),projectRepo}.ts`, test fixture updates, `src/sidepanel/hooks/useAudioPlayer.ts`, `src/sidepanel/components/{AudioControls,Overlay,TimeField}.tsx` (baru), `{PhraseCard,ProjectEditor}.tsx` (ditulis ulang), `App.tsx`, `sidepanel.css`, `e2e/extension.spec.ts` (+helper WAV & 2 tes), docs.
+- **Tests run:** `npm run verify` → build ✓, tsc ✓, ESLint ✓, Vitest **35/35**, Playwright **5/5** (dua kali; termasuk asersi tambahan klik baris overlay).
+- **Test results:** All PASS, exit 0.
+- **Regression checks:** E2E Phase 1–2 (smoke, persistensi, hapus) tetap lulus setelah perubahan skema — normalisasi record lama teruji unit test khusus.
+- **Known side effects / risks:** Durasi audio bergantung metadata yang terbaca saat pemutar aktif; overlay hanya tepat seakurat entri manual pengguna (by design). File >100 MB ditolak dengan pesan (skenario penyimpanan penuh belum diuji). Kecepatan putar & loop frasa belum ada (kandidat fitur dari hasil EXP-0001).
+- **Related entries:** REV-0004 (baseline Phase 2).
+- **Follow-up:** Review manual pengguna di Chrome; EXP-0001 tetap terbuka; coding berikutnya = Phase 4 (pembantu evaluasi kandidat).

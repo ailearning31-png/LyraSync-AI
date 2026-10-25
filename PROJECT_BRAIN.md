@@ -103,6 +103,6 @@ A phase is ready to advance when:
 
 ## 9. Current next action
 
-1. **Phase 1 & 2 built and verified in Chromium** (shell + editor + IndexedDB persistence; see ROADMAP). Manual load in branded Chrome pending user verification.
-2. **EXP-0001 is still open and must be run** (`EXPERIMENT_WORKSHEET_EXP-0001.md` ready; lyrics only in gitignored `local/` — repo is public). Its data calibrates heuristics.
-3. Next coding phase: Phase 3 — local audio playback, manual phrase timestamps, and overlay.
+1. **Phase 1–3 built and verified in Chromium** (shell; editor + persistensi; audio + timestamp manual + overlay mengikuti seek — semua lokal). Manual load in branded Chrome pending user verification.
+2. **EXP-0001 is still open and must be run** (`EXPERIMENT_WORKSHEET_EXP-0001.md` ready; lyrics only in gitignored `local/` — repo is public). Alat Fase 3 (loop tidak ada lagi — catat sebagai input untuk ekspor pengalaman nyata).
+3. Next coding phase: Phase 4 — pembantu evaluasi kandidat (estimasi suku kata yang dapat dikoreksi, heuristik kepadatan/risiko berlabel estimasi, skor manual, perbandingan kandidat).

@@ -76,7 +76,7 @@ export function App() {
       <ErrorBanner />
 
       <footer className="app-footer">
-        v{version} · Fase 2 — editor & persistensi
+        v{version} · Fase 3 — audio & overlay
       </footer>
     </div>
   )

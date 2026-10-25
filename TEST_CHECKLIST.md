@@ -19,22 +19,22 @@ Check only tests that were actually performed. Add test IDs and evidence as impl
 - [ ] Missing permissions or unavailable APIs are handled gracefully. (NOT RUN — skenario izin hilang belum diuji)
 
 ## C. Audio import and playback
-- [ ] A supported local audio file can be selected.
-- [ ] Unsupported/corrupt file produces a clear error.
-- [ ] Play, pause, seek, and duration display work.
-- [ ] Repeated play/pause does not create duplicate playback.
-- [ ] Large files fail gracefully if resource limits are reached.
-- [ ] Audio is not uploaded externally unless clearly disclosed and authorized.
+- [x] A supported local audio file can be selected. (2026-10-25: E2E Chromium mengimpor WAV sintetis; nama+durasi tampil)
+- [x] Unsupported/corrupt file produces a clear error. (E2E: file teks berekstensi .wav → pesan "Audio tidak dapat diputar")
+- [x] Play, pause, seek, and duration display work. (E2E: toggle Putar↔Jeda, slider seek, tampilan m:ss.d / durasi)
+- [x] Repeated play/pause does not create duplicate playback. (arsitektur satu elemen Audio per editor; E2E menguji toggle berulang)
+- [ ] Large files fail gracefully if resource limits are reached. (batas 100 MB diprogram dengan pesan; skenario penyimpanan penuh belum diuji)
+- [x] Audio is not uploaded externally unless clearly disclosed and authorized. (bytes hanya masuk IndexedDB lokal; audit kode: tidak ada fetch/XHR; izin manifest hanya sidePanel)
 
 ## D. Lyrics and overlay
 - [x] Source lyric can be entered and edited. (2026-10-25: E2E Chromium mengisi kolom Sumber)
 - [x] Romanized text is optional and independently editable. (E2E: kolom Romanisasi terpisah dan bisa kosong)
 - [x] Indonesian candidates can be edited without altering the source text. (E2E meng-assert nilai Sumber tetap utuh setelah mengedit kolom lain)
-- [ ] Phrase timestamps can be created and corrected manually. (Phase 3 — belum ada fitur timing)
-- [ ] Overlay remains synchronized when seeking and changing phrases. (Phase 3)
+- [x] Phrase timestamps can be created and corrected manually. (input m:ss.d per frasa + tombol Set dari pemutar; E2E Chromium)
+- [x] Overlay remains synchronized when seeking and changing phrases. (E2E: aktif di dalam rentang, nonaktif di luar; klik baris overlay melompat ke waktunya)
 - [ ] Long lines wrap without hiding controls. (CSS overflow-wrap dipakai; verifikasi visual manual pending)
-- [x] Empty and malformed text inputs are handled. (frasa boleh kosong; judul kosong ditolak dengan pesan; unit test validasi)
-- [ ] Text timing is not inferred solely from character count. (berlaku mulai Phase 3 saat ada timing)
+- [x] Empty and malformed text inputs are handled. (frasa boleh kosong; judul kosong ditolak; input waktu invalid dikembalikan ke nilai semula — unit + E2E)
+- [x] Text timing is not inferred solely from character count. (waktu hanya berasal dari entri manual/posisi pemutar; tidak ada estimasi otomatis di kode)
 
 ## E. Candidate adaptation and scoring
 - [ ] Candidate variants are clearly labeled.
@@ -73,4 +73,4 @@ For every bug fix:
 - [ ] If tests are blocked, record the reason and do not claim verified success.
 
 ## Current test status
-2026-10-25 — Phase 0: seksi A verified. Phase 1: build, typecheck, lint, unit test, E2E smoke Chromium PASS. Phase 2: `npm run verify` exit 0 — build + tsc + ESLint + **20 unit test** (repo IndexedDB via fake-indexeddb, validasi, ekspor, manifest) + **3 E2E Chromium** (smoke, persistensi lintas buka-tutup panel, hapus dua langkah). Pending: muat manual di Chrome branded, buka/tutup panel via toolbar, verifikasi visual baris panjang, seksi C/E/G/H (fiturnya belum ada atau belum diuji manual).
+2026-10-25 — Phase 0: seksi A. Phase 1–3: `npm run verify` exit 0 — build + tsc + ESLint + **35 unit test** (7 berkas: repo proyek/audio IndexedDB, validasi, format & parse waktu, frasa aktif, ekspor, manifest, formatDuration) + **5 E2E Chromium** (smoke, persistensi, hapus dua langkah, audio+timestamp+overlay mengikuti seek+pindah frasa, file korup). Pending: muat manual di Chrome branded, verifikasi visual baris panjang, skenario penyimpanan penuh, seksi E/G/H (fiturnya menyusul).

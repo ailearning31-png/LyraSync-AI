@@ -9,6 +9,22 @@ import {
   putRecord,
 } from './db'
 
+// Record lama (sebelum kolom timing/audio ada) diisi defaultnya agar UI
+// selalu bekerja dengan bentuk Project yang lengkap.
+function normalizeProject(record: Project): Project {
+  return {
+    ...record,
+    audioName: record.audioName ?? null,
+    audioDuration: record.audioDuration ?? null,
+    phrases: record.phrases.map((phrase) => ({
+      ...phrase,
+      start: phrase.start ?? null,
+      end: phrase.end ?? null,
+      notes: phrase.notes ?? '',
+    })),
+  }
+}
+
 export async function listProjects(): Promise<Project[]> {
   const db = await openDatabase()
   try {
@@ -21,6 +37,7 @@ export async function listProjects(): Promise<Project[]> {
         console.warn('Melewatkan record proyek yang tidak valid:', record)
         return false
       })
+      .map(normalizeProject)
       .sort((a, b) => b.updatedAt - a.updatedAt)
   } finally {
     db.close()
@@ -31,7 +48,9 @@ export async function getProject(id: string): Promise<Project | null> {
   const db = await openDatabase()
   try {
     const record = await getRecord<unknown>(db, PROJECT_STORE, id)
-    return record !== undefined && isProjectRecord(record) ? record : null
+    return record !== undefined && isProjectRecord(record)
+      ? normalizeProject(record)
+      : null
   } finally {
     db.close()
   }

@@ -1,8 +1,9 @@
 // Wrapper IndexedDB tanpa dependensi eksternal. Setiap operasi membuka
 // transaksinya sendiri; penulisan baru dianggap selesai saat transaksi complete.
 const DB_NAME = 'lyrasync-ai'
-const DB_VERSION = 1
+const DB_VERSION = 2
 export const PROJECT_STORE = 'projects'
+export const AUDIO_STORE = 'audio'
 
 export function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -11,6 +12,9 @@ export function openDatabase(): Promise<IDBDatabase> {
       const db = request.result
       if (!db.objectStoreNames.contains(PROJECT_STORE)) {
         db.createObjectStore(PROJECT_STORE, { keyPath: 'id' })
+      }
+      if (!db.objectStoreNames.contains(AUDIO_STORE)) {
+        db.createObjectStore(AUDIO_STORE, { keyPath: 'projectId' })
       }
     }
     request.onsuccess = () => resolve(request.result)

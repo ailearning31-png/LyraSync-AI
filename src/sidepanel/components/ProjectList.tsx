@@ -68,6 +68,8 @@ export function ProjectList({
         createdAt: now,
         updatedAt: now,
         phrases: [],
+        audioName: null,
+        audioDuration: null,
       })
       setNewTitle('')
       reload()

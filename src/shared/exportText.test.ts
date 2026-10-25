@@ -10,6 +10,8 @@ function makeProject(overrides: Partial<Project> = {}): Project {
     createdAt: now,
     updatedAt: now,
     phrases: [],
+    audioName: null,
+    audioDuration: null,
     ...overrides,
   }
 }
@@ -23,6 +25,9 @@ describe('buildExportText', () => {
           source: 'テスト',
           romanized: '',
           indonesian: 'uji coba',
+          start: null,
+          end: null,
+          notes: '',
         },
       ],
     })
@@ -38,8 +43,8 @@ describe('buildExportText', () => {
   it('menyimpan urutan frasa pada tiap seksi', () => {
     const project = makeProject({
       phrases: [
-        { id: 'a', source: 'satu', romanized: '', indonesian: '' },
-        { id: 'b', source: 'dua', romanized: '', indonesian: '' },
+        { id: 'a', source: 'satu', romanized: '', indonesian: '', start: null, end: null, notes: '' },
+        { id: 'b', source: 'dua', romanized: '', indonesian: '', start: null, end: null, notes: '' },
       ],
     })
     const text = buildExportText(project)
@@ -52,7 +57,7 @@ describe('buildExportText', () => {
 
   it('mendukung karakter Unicode Indonesia dan Jepang', () => {
     const project = makeProject({
-      phrases: [{ id: 'a', source: '太陽', romanized: 'taiyō', indonesian: 'mentari terbit' }],
+      phrases: [{ id: 'a', source: '太陽', romanized: 'taiyō', indonesian: 'mentari terbit', start: null, end: null, notes: '' }],
     })
     const text = buildExportText(project)
     expect(text).toContain('太陽')

@@ -59,19 +59,19 @@ Acceptance criteria:
 - Regression checklist passes. → `npm run verify` exit 0: build + tsc + ESLint + 20 unit test + 3 E2E ✓
 
 ## Phase 3 — Local audio playback and overlay timeline
-**Status:** Not started
+**Status:** Ready for review (2026-10-25)
 
 Tasks:
-- [ ] Import permitted local audio.
-- [ ] Add playback, seeking, and duration display.
-- [ ] Create manually editable phrase timestamps.
-- [ ] Show synchronized source/romanized/Indonesian text.
-- [ ] Test seeking and phrase switching.
+- [x] Import permitted local audio. (file picker `audio/*`; bytes disimpan di store IndexedDB 'audio' — lokal murni; batas 100 MB dengan pesan jelas; nama+durasi tercatat di proyek)
+- [x] Add playback, seeking, and duration display. (satu elemen Audio; putar/jeda, slider seek, tampilan m:ss.d / durasi)
+- [x] Create manually editable phrase timestamps. (input m:ss.d per frasa dengan validasi parse, tombol "Set mulai/akhir" dari posisi pemutar, kolom catatan bebas)
+- [x] Show synchronized source/romanized/Indonesian text. (overlay: Sumber+Romanisasi+Indonesia per baris; frasa aktif disorot `aria-current` + auto-scroll; klik baris melompat ke waktunya)
+- [x] Test seeking and phrase switching. (E2E: seek 1.0 dtk → frasa aktif; seek 2.5 dtk → nonaktif; klik baris overlay → posisi pemutar pindah)
 
 Acceptance criteria:
-- Overlay timing follows audio seeking reliably in test cases.
-- Manual correction is possible.
-- Audio and text remain local unless explicit integration is enabled.
+- Overlay timing follows audio seeking reliably in test cases. → E2E Chromium PASS (aktif di dalam rentang 0.5–2.0 dtk, nonaktif di 2.5 dtk) ✓
+- Manual correction is possible. → ketik waktu manual (invalid dikembalikan aman) + ambil posisi pemutar + catatan ✓
+- Audio and text remain local unless explicit integration is enabled. → audio & teks hanya IndexedDB lokal; tidak ada kode jaringan; izin manifest tetap hanya `sidePanel` ✓
 
 ## Phase 4 — Candidate evaluation helpers
 **Status:** Not started
@@ -135,6 +135,6 @@ Acceptance criteria:
 - Rollback to the last stable version is possible.
 
 ## Next action
-1. Review Phase 1–2: muat `dist/` manual di Chrome (chrome://extensions → Developer mode → Load unpacked), buat proyek, tulis beberapa frasa, tutup-buka panel, pastikan data bertahan.
+1. Review Phase 1–3 secara manual di Chrome: load `dist/`, buat proyek, impor audio, set timestamp, amati overlay mengikuti putar/seek.
 2. Jalankan EXP-0001 saat memungkinkan (worksheet siap) — datanya tetap dibutuhkan untuk kalibrasi heuristik.
-3. Setelah review: mulai Phase 3 (impor & pemutaran audio lokal + timestamp frasa + overlay). Do not begin advanced audio analysis before the overlay and phrase-level workflow have demonstrated value.
+3. Setelah review: mulai Phase 4 (pembantu evaluasi kandidat: estimasi suku kata, heuristik kepadatan, skor manual, label estimasi). Do not begin advanced audio analysis before the overlay and phrase-level workflow have demonstrated value.

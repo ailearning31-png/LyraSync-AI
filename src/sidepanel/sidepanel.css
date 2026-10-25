@@ -312,6 +312,150 @@ label {
   border-style: dashed;
 }
 
+/* --- Pemutar audio --- */
+.player {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+
+.player-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-row .seek {
+  flex: 1;
+  accent-color: var(--accent);
+}
+
+.player-time {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.player-meta {
+  margin: 6px 0 0;
+  font-size: 0.75rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.player-error {
+  margin: 6px 0 0;
+  font-size: 0.78rem;
+  color: #b3413f;
+}
+
+.button-like {
+  display: inline-block;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  margin: 0;
+}
+
+.button-like:hover {
+  border-color: var(--accent);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* --- Overlay lirik --- */
+.overlay {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.overlay-line {
+  display: flex;
+  gap: 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+
+.overlay-line:last-child {
+  border-bottom: none;
+}
+
+.overlay-line.active {
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.overlay-time {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  min-width: 52px;
+}
+
+.overlay-line.active .overlay-time {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.overlay-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.overlay-index {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.overlay-source {
+  overflow-wrap: anywhere;
+}
+
+.overlay-roman {
+  color: var(--muted);
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+.overlay-id {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* --- Timestamp frasa --- */
+.phrase-timing {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.time-field {
+  flex: 1;
+  min-width: 90px;
+}
+
 .notice {
   display: flex;
   align-items: center;

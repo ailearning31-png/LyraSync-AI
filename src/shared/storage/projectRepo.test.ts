@@ -17,6 +17,8 @@ function makeProject(overrides: Partial<Project> = {}): Project {
     createdAt: now,
     updatedAt: now,
     phrases: [],
+    audioName: null,
+    audioDuration: null,
     ...overrides,
   }
 }
@@ -30,8 +32,13 @@ describe('projectRepo (IndexedDB via fake-indexeddb)', () => {
           source: 'テスト',
           romanized: 'tesuto',
           indonesian: 'uji coba',
+          start: null,
+          end: null,
+          notes: '',
         },
       ],
+      audioName: 'uji.wav',
+      audioDuration: 3.5,
     })
 
     await saveProject(project)
@@ -39,16 +46,54 @@ describe('projectRepo (IndexedDB via fake-indexeddb)', () => {
     const loaded = await getProject(project.id)
     expect(loaded).not.toBeNull()
     expect(loaded?.title).toBe('Proyek Uji')
+    expect(loaded?.audioName).toBe('uji.wav')
+    expect(loaded?.audioDuration).toBe(3.5)
     expect(loaded?.phrases).toHaveLength(1)
     expect(loaded?.phrases[0]).toEqual({
       id: 'p1',
       source: 'テスト',
       romanized: 'tesuto',
       indonesian: 'uji coba',
+      start: null,
+      end: null,
+      notes: '',
     })
 
     const all = await listProjects()
     expect(all.some((p) => p.id === project.id)).toBe(true)
+  })
+
+  it('menormalisasi record lama tanpa kolom timing/audio', async () => {
+    const project = makeProject()
+    await saveProject(project)
+
+    // Timpa dengan record gaya lama (tanpa start/end/notes/audio)
+    const { openDatabase, PROJECT_STORE, putRecord } = await import('./db')
+    const db = await openDatabase()
+    try {
+      await putRecord(db, PROJECT_STORE, {
+        id: project.id,
+        title: 'Proyek Lama',
+        createdAt: project.createdAt,
+        updatedAt: project.updatedAt,
+        phrases: [{ id: 'old', source: 'x', romanized: '', indonesian: '' }],
+      })
+    } finally {
+      db.close()
+    }
+
+    const loaded = await getProject(project.id)
+    expect(loaded?.audioName).toBeNull()
+    expect(loaded?.audioDuration).toBeNull()
+    expect(loaded?.phrases[0]).toEqual({
+      id: 'old',
+      source: 'x',
+      romanized: '',
+      indonesian: '',
+      start: null,
+      end: null,
+      notes: '',
+    })
   })
 
   it('memperbarui proyek yang sudah ada dan mengurutkan berdasarkan updatedAt', async () => {
@@ -124,9 +169,33 @@ describe('projectRepo (IndexedDB via fake-indexeddb)', () => {
 })
 
 describe('validasi record', () => {
-  it('isPhraseRecord menolak bentuk yang salah', () => {
-    expect(isPhraseRecord({ id: 'a', source: '', romanized: '', indonesian: '' })).toBe(true)
-    expect(isPhraseRecord({ id: 'a', source: 1, romanized: '', indonesian: '' })).toBe(false)
+  it('isPhraseRecord menerima bentuk minimum (record lama) dan menolak yang salah', () => {
+    expect(
+      isPhraseRecord({ id: 'a', source: '', romanized: '', indonesian: '' }),
+    ).toBe(true)
+    expect(
+      isPhraseRecord({
+        id: 'a',
+        source: '',
+        romanized: '',
+        indonesian: '',
+        start: 1.5,
+        end: null,
+        notes: 'x',
+      }),
+    ).toBe(true)
+    expect(
+      isPhraseRecord({ id: 'a', source: 1, romanized: '', indonesian: '' }),
+    ).toBe(false)
+    expect(
+      isPhraseRecord({
+        id: 'a',
+        source: '',
+        romanized: '',
+        indonesian: '',
+        start: 'bukan angka',
+      }),
+    ).toBe(false)
     expect(isPhraseRecord(null)).toBe(false)
     expect(isPhraseRecord('teks')).toBe(false)
   })

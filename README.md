@@ -6,12 +6,15 @@ Ekstensi Chrome (Manifest V3) untuk membantu mengadaptasi lirik lagu ke bahasa I
 
 ## Status proyek
 
-Fase 2 — editor lirik manual & persistensi proyek. Status fase dan kriteria kelulusan: lihat `ROADMAP.md`. Keputusan & arsitektur: `PROJECT_BRAIN.md`.
+Fase 3 — audio lokal, timestamp manual, overlay terkoordinasi. Status fase dan kriteria kelulusan: lihat `ROADMAP.md`. Keputusan & arsitektur: `PROJECT_BRAIN.md`.
 
-## Fitur saat ini (Fase 2)
+## Fitur saat ini (Fase 3)
 
 - Membuat, membuka, mengubah judul, dan menghapus proyek (hapus dengan konfirmasi dua langkah).
-- Editor per frasa dengan tiga kolom teks independen: **Sumber**, **Romanisasi**, **Bahasa Indonesia**.
+- Editor per frasa dengan tiga kolom teks independen: **Sumber**, **Romanisasi**, **Bahasa Indonesia**, plus catatan bebas (jeda/nada panjang/bagian sulit).
+- **Impor audio lokal** (disimpan sebagai bytes di IndexedDB — tidak pernah diunggah; batas 100 MB) dengan putar/jeda, slider seek, dan tampilan durasi.
+- **Timestamp manual** per frasa: ketik format `m:ss.d` (invalid dikembalikan aman) atau ambil posisi pemutar lewat tombol "Set mulai/akhir".
+- **Overlay terkoordinasi**: frasa yang rentang waktunya memuat posisi audio disorot otomatis (auto-scroll), menampilkan Sumber/Romanisasi/Indonesia berdampingan; klik baris untuk melompat.
 - Autosave ke IndexedDB (debounce 400 ms; flush saat pindah tab atau panel ditutup) dengan indikator status.
 - Ekspor: salin lirik berformat ke clipboard dan unduh backup JSON.
 - Validasi dasar: judul wajib, record korup dilewati tanpa menggagalkan proyek lain.
@@ -48,10 +51,11 @@ Catatan: butuh Chrome/Chromium ≥ 114 (`minimum_chrome_version` di manifest).
 
 `npm run test:e2e` memuat build `dist/` sebagai ekstensi unpacked ke Chromium penuh (Playwright, `channel: 'chromium'`) lalu memverifikasi: service worker aktif, sidepanel dirender, navigasi antar-tab bekerja, dan tidak ada error konsol/halaman. Headless shell default Playwright **tidak** mendukung ekstensi — karena itu channel `chromium` wajib.
 
-## Batasan (Fase 2)
+## Batasan (Fase 3)
 
-- Belum ada impor/pemutaran audio, timestamp frasa, atau overlay — menyusul di Fase 3.
-- Belum ada integrasi AI, estimasi suku kata, atau kandidat adaptasi — Fase 4–5.
+- Tidak ada estimasi suku kata, kandidat adaptasi, atau AI — Fase 4–5.
+- Analisis audio otomatis (beat/onset/pitch) **sengaja tidak ada** — audio adalah referensi timing yang dikoreksi manual; sesuai prinsip proyek.
+- Kecepatan putar & loop frasa belum ada.
 - Belum ada undo/redo; ada backup JSON sebagai jaring pengaman.
 - Clipboard tidak di-assert di E2E (keterbatasan headless); fungsi teks ekspor diuji unit test, tombol salin diuji manual.
 - Ikon ekstensi belum dibuat (memakai ikon default Chrome).
