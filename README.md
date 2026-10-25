@@ -61,6 +61,25 @@ Catatan: butuh Chrome/Chromium ≥ 114 (`minimum_chrome_version` di manifest).
 - Ambang heuristik (risiko kepadatan, bobot skor) masih hipotesis menunggu kalibrasi.
 - Tidak ada undo/redo atau ikon ekstensi; E2E memakai Chromium — muat manual di Chrome branded dianjurkan.
 
+## Mode lokal gratis (Ollama — tanpa API key)
+
+Kandidat AI bisa dibuat **gratis dan offline** memakai Ollama di komputer sendiri:
+
+1. **Pasang Ollama** — unduh dari [ollama.com](https://ollama.com) (Windows/macOS/Linux). Setelah terpasang, server berjalan otomatis di `http://localhost:11434`.
+2. **Unduh model** — di terminal: `ollama pull llama3.1:8b` (±4,9 GB; lebih ringan: `llama3.2:3b` dengan kualitas lebih rendah; `qwen2.5:7b` juga kuat untuk bahasa Indonesia).
+3. **Izinkan ekstensi (CORS) — gunakan yang paling sempit dulu:**
+   - Salin ID ekstensi Anda dari `chrome://extensions` (kartu LyraSync AI, 32 huruf).
+   - Windows (PowerShell, lalu **keluar dari tray & jalankan ulang Ollama**):
+     `setx OLLAMA_ORIGINS "chrome-extension://ID-ANDA"`
+   - Fallback hanya bila ID sering berubah (mode unpacked): `setx OLLAMA_ORIGINS "chrome-extension://*"` — lebih longgar karena mengizinkan semua ekstensi; hindari `*` polos (mengizinkan semua situs).
+   - macOS/Linux: `launchctl setenv OLLAMA_ORIGINS "chrome-extension://ID-ANDA"` (macOS) atau `Environment=` di unit service (Linux), lalu restart Ollama.
+4. **Di LyraSync AI** — tab Pengaturan → klik **"Preset Ollama lokal (gratis, tanpa kunci)"** → sesuaikan nama model dengan yang Anda pull → **Simpan** → kunci dibiarkan kosong.
+5. **Uji** — tab Editor → "Buat kandidat (AI)". Semua data tetap di komputer Anda.
+
+**Spek komputer (model 7–8B Q4):** disk ±5 GB per model; RAM total ≥ 8 GB (16 GB nyaman); CPU modern bisa jalan tapi lambat (satu permintaan bisa 1–2 menit — batas waktu klien sudah 120 detik); GPU VRAM ≥ 6 GB atau Apple Silicon jauh lebih cepat.
+
+**Batasan jujur:** kualitas kandidat model lokal 7–8B tidak setara model cloud besar dan bervariasi antar model; jalur Ollama **asli** diuji di mesin pengguna — pada CI kami diuji lewat server tiruan bergaya Ollama (E2E #9, respons identik formatnya).
+
 ## Rilis & rollback
 
 - Rilis beta saat ini: tag **`v0.1.0-beta.1`** (pra-rilis — bukan klaim siap produksi; lihat Known issues).

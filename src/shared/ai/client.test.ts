@@ -57,12 +57,30 @@ describe('generateCandidates', () => {
     expect(result).toHaveLength(3)
   })
 
-  it('menolak kunci kosong/konfigurasi tidak lengkap tanpa memanggil jaringan', async () => {
+  it('menolak konfigurasi tidak lengkap (tanpa baseUrl/model) tanpa memanggil jaringan', async () => {
     const fetchFn = vi.fn()
     await expect(
       generateCandidates({ settings: { baseUrl: '', apiKey: '', model: '' }, context, fetchFn }),
     ).rejects.toThrow(/belum dikonfigurasi/)
     expect(fetchFn).not.toHaveBeenCalled()
+  })
+
+  it('mode lokal: kunci kosong sah — request terkirim TANPA header Authorization', async () => {
+    const fetchFn = vi.fn(async () =>
+      jsonResponse({ choices: [{ message: { content: JSON.stringify(validPayload) } }] }),
+    )
+    const localSettings = {
+      baseUrl: 'http://localhost:11434/v1',
+      apiKey: '',
+      model: 'llama3.1:8b',
+    }
+    const result = await generateCandidates({ settings: localSettings, context, fetchFn })
+
+    expect(result).toHaveLength(3)
+    const [url, init] = fetchFn.mock.calls[0] as unknown as [string, RequestInit]
+    expect(url).toBe('http://localhost:11434/v1/chat/completions')
+    expect((init.headers as Record<string, string>).Authorization).toBeUndefined()
+    expect(JSON.parse(String(init.body)).model).toBe('llama3.1:8b')
   })
 
   it('pesan error untuk 401/429/5xx dan jaringan tidak pernah membocorkan kunci', async () => {

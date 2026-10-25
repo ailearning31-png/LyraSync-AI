@@ -226,3 +226,23 @@ Use one entry per bug fix, implementation change, or meaningful revision. Keep o
 - **Known issues (tetap terbuka):** EXP-0001 belum dijalankan; uji AI penyedia nyata BLOCKED (kunci pengguna); akurasi analisis jeda di lagu nyata belum diukur; muat manual Chrome branded belum diverifikasi pengguna; verifikasi visual baris panjang & skenario penyimpanan penuh belum diuji.
 - **Related entries:** REV-0008 (baseline Phase 6).
 - **Follow-up:** Pengguna menjalankan EXP-0001 → kalibrasi → kriteria rilis penuh.
+
+---
+
+## 2026-10-25 — Dukungan LLM lokal (Ollama)
+
+### REV-0010 — Mode lokal gratis tanpa API key (Ollama) dengan perubahan minimal
+- **Date:** 2026-10-25
+- **Status:** Verified
+- **Reported behavior:** Permintaan pengguna: LyraSync AI dapat dipakai gratis tanpa API key. Kondisi sebelumnya: kunci API wajib di klien dan di penyimpanan pengaturan.
+- **Expected behavior:** Ollama lokal (endpoint `/v1/chat/completions` kompatibel OpenAI) bisa dipakai tanpa kunci; provider cloud tidak berubah; tidak ada rahasia di kode.
+- **Root cause:** n/a — feature work kecil. Verifikasi kompatibilitas: format request klien (model/messages/temperature) dan bentuk respons `{choices:[{message:{content}}]}` sudah sesuai yang diterima Ollama; TIDAK ada endpoint baru yang perlu ditulis.
+- **Fix or change:** `client.ts` — `assertSettings` tidak lagi mewajibkan kunci; header `Authorization` hanya dikirim bila kunci diisi; `DEFAULT_TIMEOUT_MS` 30→120 dtk (LLM lokal di CPU lambat). `settingsStore.ts` — penyimpanan menerima kunci kosong (baseUrl+model tetap wajib). `SettingsPanel` — label "Kunci API (opsional)", tombol **"Preset Ollama lokal (gratis, tanpa kunci)"** (mengisi `http://localhost:11434/v1`, mengosongkan kunci, model default `llama3.1:8b` bila kosong), hint CORS sesempit mungkin (ID ekstensi dulu, wildcard `chrome-extension://*` hanya fallback). README: panduan pasang Ollama, pull model, OLLAMA_ORIGINS per OS, spek komputer, batasan jujur.
+- **Privacy check:** permintaan tetap hanya mengirim teks konteks frasa, hanya saat tombol AI ditekan; server lokal berarti data tidak keluar perangkat sama sekali; tidak ada rahasia di kode (kunci kosong = tanpa header).
+- **Files changed:** `src/shared/ai/client.ts`, `src/shared/ai/settingsStore.ts`, `src/shared/ai/{client,settingsStore}.test.ts`, `src/sidepanel/components/SettingsPanel.tsx`, `e2e/extension.spec.ts` (+tes 9), README, dan dokumen proyek.
+- **Tests run:** `npm run verify` → build ✓, tsc ✓, ESLint ✓, Vitest **81/81** (baru: kunci kosong sah + tanpa header Authorization; kunci kosong tersimpan), Playwright **9/9** (baru: **tes 9 — server tiruan bergaya Ollama tanpa kunci → ketiga kandidat terisi, label "oleh model-lokal-uji"**).
+- **Test results:** All PASS, exit 0.
+- **Regression checks:** Seluruh E2E 1–8 tetap lulus — provider cloud dengan kunci tidak berubah perilaku (401 tetap teruji).
+- **Known side effects / risks:** **Ollama asli belum diuji di mesin pengguna** (diuji lewat server tiruan berformat identik); kualitas model lokal bervariasi; CPU-only lambat (timeout 120 dtk bisa tercapai di mesin lemah); CORS wildcard `chrome-extension://*` lebih longgar — direkomendasikan hanya sebagai fallback.
+- **Related entries:** REV-0009 (audit Phase 7).
+- **Follow-up:** Pengguna memasang Ollama + menjalankan EXP-0001 secara gratis; hasil nyata dicatat di `EXPERIMENT_LOG.md`.

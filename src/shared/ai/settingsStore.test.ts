@@ -28,11 +28,24 @@ describe('settingsStore (konfigurasi AI pengguna)', () => {
     expect(await loadAiSettings()).toEqual({ baseUrl: 'https://x.example', apiKey: ' k ', model: 'm1' })
   })
 
-  it('menolak menyimpan konfigurasi tidak lengkap', async () => {
+  it('kunci kosong sah untuk server lokal; baseUrl/model tetap wajib', async () => {
+    await saveAiSettings({
+      baseUrl: 'http://localhost:11434/v1',
+      apiKey: '',
+      model: 'llama3.1:8b',
+    })
+    expect(await loadAiSettings()).toEqual({
+      baseUrl: 'http://localhost:11434/v1',
+      apiKey: '',
+      model: 'llama3.1:8b',
+    })
+
     await expect(
-      saveAiSettings({ baseUrl: 'https://x', apiKey: '  ', model: 'm' }),
+      saveAiSettings({ baseUrl: '   ', apiKey: 'kunci', model: 'm' }),
     ).rejects.toThrow(/Lengkapi/)
-    expect(await loadAiSettings()).toBeNull()
+    await expect(
+      saveAiSettings({ baseUrl: 'https://x', apiKey: 'kunci', model: ' ' }),
+    ).rejects.toThrow(/Lengkapi/)
   })
 
   it('menghapus konfigurasi', async () => {

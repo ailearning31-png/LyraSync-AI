@@ -45,7 +45,7 @@ Record each manual lyric-adaptation experiment. Do not store copyrighted lyrics 
   4. Masukkan satu frasa pendek → "Tambah frasa" + 3 kolom teks.
   5. Tekan "Buat kandidat (AI)" → tombol tersedia per frasa.
   6. Lihat kandidat atau pesan error yang jelas → jalur error teruji (belum dikonfigurasi / 401); **jalur sukses dengan penyedia nyata BELUM diuji — butuh kunci pengguna**.
-- **Catatan mode:** TIDAK ada mode AI tanpa kunci. Opsi: layanan cloud ber-kunci (bisa gratis per data kuota) atau LLM lokal Ollama (gratis, tetap isi placeholder di kolom kunci + CORS `OLLAMA_ORIGINS`).
+- **Catatan mode (diperbarui 2026-10-25, menggantikan catatan sebelumnya):** mode lokal gratis KINI tersedia via Ollama (REV-0010) — tanpa API key: tab Pengaturan → "Preset Ollama lokal" → ikuti README (pasang Ollama, pull model, atur OLLAMA_ORIGINS sesempit mungkin = ID ekstensi). Alternatif tetap: layanan cloud ber-kunci. Kualitas model lokal bervariasi — catat nama model yang dipakai di hasil eksperimen. Jalur Ollama asli diuji pengguna; di CI terverifikasi lewat server tiruan berformat identik (E2E #9).
 - **Important limitation:** Text length and syllable count do not establish melodic fit by themselves. Audio and human listening remain necessary.
 - **Result:** Not run. (Belum diuji — menunggu pengguna; jangan mengarang hasil.)
 - **Method:**

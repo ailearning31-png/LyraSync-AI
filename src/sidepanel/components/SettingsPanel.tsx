@@ -62,6 +62,15 @@ export function SettingsPanel() {
     }
   }
 
+  const handlePresetOllama = () => {
+    setBaseUrl('http://localhost:11434/v1')
+    setApiKey('')
+    setModel((current) => (current.trim() === '' ? 'llama3.1:8b' : current))
+    setNotice(
+      'Preset Ollama lokal diisi: pastikan Ollama berjalan dan model sudah di-pull (lihat README). Nama model menyesuaikan model yang Anda unduh.',
+    )
+  }
+
   return (
     <>
       <h2>Pengaturan</h2>
@@ -71,6 +80,12 @@ export function SettingsPanel() {
         Ketika Anda menekan "Buat kandidat (AI)", <em>teks lirik</em> dan konteks
         frasa dikirim ke layanan yang Anda konfigurasi di bawah ini. Kunci API
         hanya disimpan lokal di perangkat ini dan tidak pernah masuk kode sumber.
+      </div>
+
+      <div className="editor-actions">
+        <button type="button" onClick={handlePresetOllama}>
+          Preset Ollama lokal (gratis, tanpa kunci)
+        </button>
       </div>
 
       {notice !== null && (
@@ -104,19 +119,20 @@ export function SettingsPanel() {
               onChange={(event) => setBaseUrl(event.target.value)}
             />
             <p className="field-hint">
-              Endpoint kompatibel OpenAI (OpenAI, OpenRouter, Groq, dsb.).
-              Untuk LLM lokal seperti Ollama, jalankan dengan
-              OLLAMA_ORIGINS=chrome-extension://* agar CORS diizinkan.
+              Endpoint kompatibel OpenAI (OpenAI, OpenRouter, Groq, atau Ollama
+              lokal di <code>http://localhost:11434/v1</code>). Untuk LLM lokal,
+              jalankan Ollama dengan OLLAMA_ORIGINS sesuai ID ekstensi —
+              langkah lengkap di README.
             </p>
           </div>
 
           <div className="field">
-            <label htmlFor="ai-api-key">Kunci API</label>
+            <label htmlFor="ai-api-key">Kunci API (opsional)</label>
             <input
               id="ai-api-key"
               type="password"
               value={apiKey}
-              placeholder="kunci API Anda"
+              placeholder="kosongkan untuk server lokal tanpa kunci (mis. Ollama)"
               onChange={(event) => setApiKey(event.target.value)}
             />
           </div>

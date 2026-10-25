@@ -90,7 +90,7 @@ Record observations separately from scores. Scores are experimental and must be 
 | Original/romanized lyric overlay | Core investigation | Compare text with phrase timing; romanization is not a timing measurement |
 | Automatic audio analysis | Later phase → MVP implemented (2026-10-25) | Energy-based pause/onset detection, 100% local via Web Audio API, labeled as estimates; separation/pitch/alignment deferred with documented reasons; real-music accuracy pending EXP-0001 |
 | AI agent memory and revision guard | Required development process | Documentation + tests + version control |
-| AI integration: BYO configuration (2026-10-25) | Working decision | Provider-agnostic OpenAI-compatible endpoint configured by the user in-app; key only in `chrome.storage.local`, never in source; audio never sent — text only, on explicit button press |
+| AI integration: BYO configuration (2026-10-25) | Working decision | Provider-agnostic OpenAI-compatible endpoint configured by the user in-app; key optional (empty = local server like Ollama, no Authorization header sent); key only in `chrome.storage.local`, never in source; audio never sent — text only, on explicit button press |
 
 ## 8. Definition of useful progress
 

@@ -3,20 +3,17 @@ import { AiError, type AiSettings, type GeneratedCandidate, type PhraseContext }
 
 export type FetchFn = (input: string, init?: RequestInit) => Promise<Response>
 
-export const DEFAULT_TIMEOUT_MS = 30_000
+// 120 detik: server LLM lokal (Ollama di CPU) bisa lambat menghasilkan tiga
+// kandidat; batas ketat 30 dtk sering memutus respons yang masih sah.
+export const DEFAULT_TIMEOUT_MS = 120_000
 
 function assertSettings(settings: AiSettings): void {
   const baseUrl = settings.baseUrl.trim()
-  const apiKey = settings.apiKey.trim()
   const model = settings.model.trim()
-  if (
-    baseUrl === '' ||
-    apiKey === '' ||
-    model === '' ||
-    !/^https?:\/\//i.test(baseUrl)
-  ) {
+  // apiKey OPSIONAL: server lokal (mis. Ollama) tidak memerlukan kunci.
+  if (baseUrl === '' || model === '' || !/^https?:\/\//i.test(baseUrl)) {
     throw new AiError(
-      'AI belum dikonfigurasi dengan lengkap. Buka tab Pengaturan: isi alamat layanan (http/https), kunci API, dan nama model.',
+      'AI belum dikonfigurasi dengan lengkap. Buka tab Pengaturan: isi alamat layanan (http/https) dan nama model. Kunci API opsional — kosongkan untuk server lokal seperti Ollama.',
     )
   }
 }
@@ -88,12 +85,14 @@ export async function generateCandidates(options: {
   try {
     let response: Response
     try {
+      // Header Authorization hanya dikirim bila kunci diisi — server lokal
+      // (Ollama) tidak memerlukannya dan tidak boleh menerima header kosong.
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      const apiKey = settings.apiKey.trim()
+      if (apiKey !== '') headers.Authorization = `Bearer ${apiKey}`
       response = await fetchFn(`${baseUrl}/chat/completions`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${settings.apiKey.trim()}`,
-        },
+        headers,
         body: JSON.stringify({
           model: settings.model.trim(),
           messages: buildMessages(context),

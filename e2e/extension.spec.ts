@@ -464,3 +464,69 @@ test('analisis: jeda antar segmen terdeteksi sesuai batas known dan bisa diverif
     await context.close()
   }
 })
+
+// Server tiruan berperilaku seperti Ollama lokal: endpoint kompatibel OpenAI,
+// TANPA kunci (Authorization diabaikan), CORS diizinkan. Ini proxy jujur untuk
+// menguji jalur "mode lokal tanpa API key" — Ollama asli diuji di mesin pengguna.
+async function startOllamaLikeServer(): Promise<{ server: Server; baseUrl: string }> {
+  const payload = {
+    candidates: [
+      { slot: 'meaning', text: 'kandidat lokal A', rationale: 'setia makna' },
+      { slot: 'balanced', text: 'kandidat lokal B', rationale: 'seimbang' },
+      { slot: 'singability', text: 'kandidat lokal C', rationale: 'mudah dinyanyikan' },
+    ],
+  }
+  const server = createServer((req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    if (req.method === 'OPTIONS') {
+      res.statusCode = 204
+      res.end()
+      return
+    }
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ choices: [{ message: { content: JSON.stringify(payload) } }] }))
+  })
+  await new Promise<void>((resolveListen) => server.listen(0, '127.0.0.1', resolveListen))
+  const address = server.address()
+  const port = typeof address === 'object' && address !== null ? address.port : 0
+  return { server, baseUrl: `http://127.0.0.1:${port}/v1` }
+}
+
+test('AI lokal tanpa kunci: kandidat terisi penuh via server lokal bergaya Ollama', async () => {
+  const { server, baseUrl } = await startOllamaLikeServer()
+  const { context, extensionId } = await launchExtension()
+
+  try {
+    const page = await context.newPage()
+    await page.goto(`chrome-extension://${extensionId}/sidepanel.html`)
+
+    await page.getByLabel('Judul proyek baru').fill('Proyek Ollama')
+    await page.getByRole('button', { name: 'Buat proyek' }).click()
+    await page.getByRole('button', { name: 'Buka' }).click()
+    await page.getByRole('button', { name: 'Tambah frasa' }).click()
+    await page.getByLabel('Sumber').fill('テスト')
+
+    // Konfigurasi: base URL server lokal, kunci DIBIARKAN KOSONG, model diisi
+    await page.getByRole('tab', { name: 'Pengaturan' }).click()
+    await page.getByLabel('Alamat layanan (Base URL)').fill(baseUrl)
+    await page.getByLabel('Kunci API (opsional)').fill('')
+    await page.getByLabel('Nama model').fill('model-lokal-uji')
+    await page.getByRole('button', { name: 'Simpan pengaturan' }).click()
+    await expect(page.getByText('Pengaturan tersimpan')).toBeVisible()
+
+    // Generate → kandidat A terisi tanpa kunci apa pun
+    await page.getByRole('tab', { name: 'Editor' }).click()
+    await page.getByRole('button', { name: 'Buat kandidat (AI)' }).click()
+    await expect(page.getByLabel('Teks kandidat (A)')).toHaveValue('kandidat lokal A', {
+      timeout: 10_000,
+    })
+    await expect(page.getByText('oleh model-lokal-uji').first()).toBeVisible()
+    await expect(page.getByLabel('Teks kandidat (C)')).toHaveValue('kandidat lokal C')
+  } finally {
+    await context.close()
+    server.close()
+  }
+})

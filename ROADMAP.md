@@ -135,6 +135,6 @@ Acceptance criteria:
 - Rollback to the last stable version is possible. → tag Git + instruksi checkout di README
 
 ## Next action
-1. **Pengguna jalankan EXP-0001** (worksheet + langkah siap; lihat `EXPERIMENT_LOG.md` EXP-0001): satu frasa pendek, konfigurasi AI pribadi, nyanyikan kandidat, catat hasil.
+1. **Pengguna jalankan EXP-0001** — kini bisa GRATIS tanpa API key via Ollama lokal (REV-0010; panduan lengkap di README): satu frasa pendek, konfigurasi AI lokal, nyanyikan kandidat, catat hasil + nama model.
 2. Setelah data EXP-0001 masuk: kalibrasi ambang heuristik & bobot skor, evaluasi kebutuhan analisis lanjutan (Phase 6 lanjutan tetap ditunda).
-3. Kriteria rilis penuh (bukan beta): EXP-0001 tervalidasi + uji AI penyedia nyata + review manual Chrome branded.
+3. Kriteria rilis penuh (bukan beta): EXP-0001 tervalidasi + uji AI penyedia nyata (lokal/cloud) + review manual Chrome branded.

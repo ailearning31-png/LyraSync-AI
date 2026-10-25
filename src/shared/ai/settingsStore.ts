@@ -91,8 +91,9 @@ export async function loadAiSettings(): Promise<ValidatedAiSettings | null> {
 
 export async function saveAiSettings(settings: AiSettings): Promise<void> {
   const validated = validateAiSettings(settings)
-  if (validated === null || validated.apiKey.trim() === '') {
-    throw new AiError('Lengkapi alamat layanan, kunci API, dan nama model sebelum menyimpan.')
+  // apiKey sengaja boleh kosong: server lokal (Ollama) tidak memerlukannya.
+  if (validated === null) {
+    throw new AiError('Lengkapi alamat layanan dan nama model sebelum menyimpan.')
   }
   await getStore().set(STORAGE_KEY, validated)
 }
