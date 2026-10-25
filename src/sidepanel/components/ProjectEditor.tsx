@@ -19,6 +19,7 @@ import { getProject, saveProject } from '../../shared/storage/projectRepo'
 import type { Candidate, CandidateScores, Phrase, Project } from '../../shared/types'
 import { useAudioPlayer } from '../hooks/useAudioPlayer'
 import { useAutoSave, type SaveStatus } from '../hooks/useAutoSave'
+import { AudioAnalysisPanel } from './AudioAnalysisPanel'
 import { AudioControls } from './AudioControls'
 import { Overlay } from './Overlay'
 import { PhraseCard } from './PhraseCard'
@@ -48,6 +49,14 @@ export function ProjectEditor({
   const [generatingPhraseId, setGeneratingPhraseId] = useState<string | null>(
     null,
   )
+  // Blob audio aktif untuk analisis lokal (tidak pernah dikirim ke mana pun)
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
+  const [audioVersion, setAudioVersion] = useState(0)
+
+  const attachAudioBlob = (blob: Blob | null) => {
+    setAudioBlob(blob)
+    setAudioVersion((version) => version + 1)
+  }
 
   const mutate = useCallback(
     (transform: (current: Project) => Project) => {
@@ -101,6 +110,7 @@ export function ProjectEditor({
         const record = await getAudio(projectId)
         if (!cancelled && record !== null) {
           loadBlob(record.blob, record.name)
+          attachAudioBlob(record.blob)
         }
       } catch {
         // Gagal memuat audio tidak boleh menggagalkan editor; tombol impor tetap tersedia.
@@ -357,6 +367,7 @@ export function ProjectEditor({
     try {
       await saveAudio(projectId, file, file.name, file.type)
       player.loadBlob(file, file.name)
+      attachAudioBlob(file)
       mutate((current) => ({ ...current, audioName: file.name }))
       setNotice('Audio tersimpan secara lokal (tidak diunggah ke mana pun)')
     } catch (error) {
@@ -373,6 +384,7 @@ export function ProjectEditor({
     try {
       await deleteAudio(projectId)
       player.reset()
+      attachAudioBlob(null)
       mutate((current) => ({
         ...current,
         audioName: null,
@@ -522,6 +534,12 @@ export function ProjectEditor({
         hasStoredAudio={project.audioName !== null}
         onImportFile={(file) => void handleImportFile(file)}
         onRemoveAudio={() => void handleRemoveAudio()}
+      />
+
+      <AudioAnalysisPanel
+        key={`analysis-${audioVersion}`}
+        audioBlob={audioBlob}
+        onSeek={player.seek}
       />
 
       <Overlay

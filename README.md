@@ -6,18 +6,19 @@ Ekstensi Chrome (Manifest V3) untuk membantu mengadaptasi lirik lagu ke bahasa I
 
 ## Status proyek
 
-Fase 5 — integrasi AI (konfigurasi oleh pengguna). Status fase dan kriteria kelulusan: lihat `ROADMAP.md`. Keputusan & arsitektur: `PROJECT_BRAIN.md`.
+Fase 6 — analisis audio otomatis (MVP, lokal). Status fase dan kriteria kelulusan: lihat `ROADMAP.md`. Keputusan & arsitektur: `PROJECT_BRAIN.md`.
 
-## Fitur saat ini (Fase 5)
+## Fitur saat ini (Fase 6)
 
 - Membuat, membuka, mengubah judul, dan menghapus proyek (hapus dengan konfirmasi dua langkah).
 - Editor per frasa: **Sumber**, **Romanisasi**, **Bahasa Indonesia** (adaptasi terpilih), catatan jeda/nada panjang.
 - **Impor audio lokal** (IndexedDB, tidak pernah diunggah; batas 100 MB) + putar/jeda/seek/durasi.
 - **Timestamp manual** (`m:ss.d` atau ambil posisi pemutar) dan **overlay** yang menyorot frasa aktif mengikuti audio.
-- **Tiga kandidat per frasa** (A meaning-first / B balanced / C singability-first) + tombol "Gunakan" untuk menerapkan.
+- **Tiga kandidat per frasa** (A meaning-first / B balanced / C singability-first) + tombol "Gunakan".
 - **Estimasi suku kata otomatis** yang dapat dikoreksi; **heuristik kepadatan** berlabel estimasi; **skor manual** 5 dimensi + total berbobot (hipotesis); tabel perbandingan.
-- **Integrasi AI (BYO):** isi sendiri Base URL + kunci API + model (endpoint kompatibel OpenAI) di tab **Pengaturan**; kunci hanya disimpan lokal (`chrome.storage.local`), tidak pernah di kode sumber; **audio tidak pernah dikirim** — hanya teks frasa saat tombol AI ditekan; kandidat AI mengisi slot kosong (tidak pernah menimpa tulisan Anda), dilabel "oleh {model}"; satu percobaan per klik, tanpa retry otomatis; pesan ramah untuk 401/429/5xx/timeout/jaringan.
-- **Ekspor**: salin lirik, unduh backup JSON, dan **unduh catatan eksperimen (.md)** (termasuk jejak kandidat AI).
+- **Integrasi AI (BYO):** konfigurasi sendiri di tab Pengaturan; kunci hanya lokal; audio tidak pernah dikirim; kandidat AI mengisi slot kosong tanpa menimpa tulisan Anda, terlacak per model.
+- **Analisis jeda (estimasi, 100% lokal):** deteksi segmen suara & jeda antar frasa berbasis energi (Web Audio API, tanpa dependensi); klik jeda untuk mendengarkan dari awalnya; hasil berlabel estimasi — koreksi manual tetap sumber utama.
+- **Ekspor**: salin lirik, unduh backup JSON, dan **unduh catatan eksperimen (.md)**.
 - Autosave IndexedDB dengan indikator status; validasi dasar & pemulihan record korup.
 
 ## Prasyarat
@@ -52,13 +53,13 @@ Catatan: butuh Chrome/Chromium ≥ 114 (`minimum_chrome_version` di manifest).
 
 `npm run test:e2e` memuat build `dist/` sebagai ekstensi unpacked ke Chromium penuh (Playwright, `channel: 'chromium'`) lalu memverifikasi: service worker aktif, sidepanel dirender, navigasi antar-tab bekerja, dan tidak ada error konsol/halaman. Headless shell default Playwright **tidak** mendukung ekstensi — karena itu channel `chromium` wajib.
 
-## Batasan (Fase 5)
+## Batasan (Fase 6)
 
-- **Uji ke penyedia AI nyata belum dilakukan** (menunggu kunci pengguna) — jalur sukses terverifikasi lewat mock; jalur 401 lewat server uji lokal nyata.
-- Estimasi suku kata & ambang risiko & bobot skor **adalah heuristik/hipotesis** — koreksi manual disediakan; kalibrasi menunggu EXP-0001.
-- Tanpa izin host di manifest: penyedia cloud umum berfungsi lewat CORS; LLM lokal (Ollama) perlu `OLLAMA_ORIGINS=chrome-extension://*`.
-- Tidak ada analisis audio otomatis (Fase 6, opsional), undo/redo, atau ikon ekstensi.
-- E2E memakai Chromium; muat manual di Chrome branded dianjurkan (`TEST_CHECKLIST.md` bagian B).
+- Analisis jeda **adalah estimasi berbasis energi** — bagian pelan pada musik nyata bisa salah terdeteksi sebagai jeda; akurasi terukur hanya pada sinyal sintetis (< 100 ms); akurasi lagu nyata menunggu anotasi manual (EXP-0001).
+- Separasi vokal, pitch tracking, alignment suku kata, dan estimasi tempo penuh **sengaja ditunda** (alasan: model besar/lisensi/performa; lihat ROADMAP Phase 6).
+- Uji ke penyedia AI nyata belum dilakukan (menunggu kunci pengguna); jalur 401 teruji via server lokal.
+- Ambang heuristik (risiko kepadatan, bobot skor) masih hipotesis menunggu kalibrasi.
+- Tidak ada undo/redo atau ikon ekstensi; E2E memakai Chromium — muat manual di Chrome branded dianjurkan.
 
 ## Privasi
 

@@ -178,3 +178,25 @@ Use one entry per bug fix, implementation change, or meaningful revision. Keep o
 - **Known side effects / risks:** **Uji ke penyedia AI nyata BLOCKED** menunggu kunci pengguna — jalur sukses terverifikasi lewat mock fetch, jalur 401 lewat server lokal sungguhan. Untuk LLM lokal (Ollama) pengguna harus mengizinkan CORS (OLLAMA_ORIGINS). Tanpa izin host di manifest — mengandalkan CORS layanan (berlaku untuk penyedia cloud umum).
 - **Related entries:** REV-0006 (baseline Phase 4).
 - **Follow-up:** Pengguna mengisi konfigurasi AI & menguji dengan penyedia nyata; EXP-0001 tetap terbuka; sisa roadmap: Phase 6 (opsional) & Phase 7 (rilis).
+
+---
+
+## 2026-10-25 — Phase 6 implementation
+
+### REV-0008 — Energy-based pause/onset analysis (local, explainable) with measured accuracy
+- **Date:** 2026-10-25
+- **Status:** Verified
+- **Reported behavior:** Not a bug — implementation task (ROADMAP Phase 6, scoped MVP). Tidak ada analisis otomatis sebelumnya.
+- **Expected behavior:** Deteksi jeda/batas frasa berbasis energi, diukur akurasinya, berlabel estimasi, koreksi manual tetap utama; kelayakan separation/pitch/alignment dieksplorasi dan diputuskan (kriteria Phase 6).
+- **Fix or change:** `src/shared/audio/analysis.ts` — `analyzeEnergyPcm` (envelope RMS window 50 ms / hop 25 ms; ambang = 5% × RMS puncak; segmen ≥ 150 ms; jeda disarankan bila ≥ 250 ms — semua parameter terdokumentasi dan dapat dijelaskan) + `decodeForAnalysis` (mixdown mono). UI `AudioAnalysisPanel` (tombol analisis, ringkasan segmen/jeda, daftar jeda yang diklik → seek pemutar untuk verifikasi telinga, label estimasi + peringatan "bagian pelan ≠ jeda"). Editor melacak blob audio aktif (tidak pernah keluar dari perangkat).
+- **Keputusan eksplorasi (terdokumentasi):** separasi vokal & pitch tracking DITUNDA (butuh model ML besar, implikasi lisensi/performa, belum ada kebutuhan terbukti); alignment suku kata DITUNDA (forced alignment butuh model; koreksi manual cukup cepat untuk MVP); estimasi tempo penuh DITUNDA (onset/batas sudah tersedia); Essentia.js DIHINDARI (ukuran & tinjauan lisensi).
+- **Defect 1 (E2E timeout):** `new AudioContext()` di Chromium headless tanpa perangkat audio dapat menggantung decode — diganti `OfflineAudioContext` (decode tidak butuh perangkat keluaran), fallback AudioContext.
+- **Defect 2 (E2E strict mode):** tombol "Jeda" bentrok dengan "Analisis **jeda**" — selector E2E diperbaiki `exact: true`.
+- **Defect 3 (unit test):** ekspektasi awal mengira celah pendek menyatukan segmen — semantik benar: segmen tetap dua (fakta fisik), hanya SARAN jeda yang tidak muncul. Tes disesuaikan menggambarkan semantik itu.
+- **Files changed:** `src/shared/audio/analysis.ts` (+test), `src/sidepanel/components/AudioAnalysisPanel.tsx` (baru), `ProjectEditor.tsx`, `sidepanel.css`, `e2e/extension.spec.ts` (makeWavBuffer bersegmen + tes analisis), docs.
+- **Tests run:** `npm run verify` → build ✓, tsc ✓, ESLint ✓, Vitest **80/80** (termasuk 6 tes akurasi vs ground truth sintetis), Playwright **8/8**.
+- **Test results:** All PASS, exit 0. Akurasi terukur: 3/3 segmen & 2/2 jeda pada sinyal uji, galat batas < 100 ms.
+- **Regression checks:** Seluruh E2E Phase 1–5 tetap lulus.
+- **Known side effects / risks:** **Akurasi pada musik nyata belum diukur** (butuh anotasi manual pengguna — kelanjutan EXP-0001). Ambang 5%/250 ms default bisa salah pada musik dengan bagian pelan — panel sudah memperingatkan. Beat/tempo penuh belum ada.
+- **Related entries:** REV-0007 (baseline Phase 5).
+- **Follow-up:** Pengguna menguji analisis pada lagu nyata + mencatat akurasinya (EXP-0001); sisa roadmap: Phase 7 (regresi penuh, rilis).

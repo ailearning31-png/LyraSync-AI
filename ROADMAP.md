@@ -104,19 +104,19 @@ Acceptance criteria:
 - Evaluation results are recorded rather than assumed. → kandidat AI lewat alur penilaian manual yang sama (skor/pengguna/ekspor) ✓
 
 ## Phase 6 — Advanced audio analysis
-**Status:** Not started; optional
+**Status:** Ready for review — MVP analisis energi (2026-10-25); lagu nyata menunggu EXP-0001
 
-Potential tasks:
-- [ ] Estimate beat/onset and phrase boundaries.
-- [ ] Explore vocal separation and pitch tracking.
-- [ ] Explore syllable/phoneme alignment.
-- [ ] Compare estimates against manual annotations.
-- [ ] Keep manual correction available.
+Tasks:
+- [x] Estimate beat/onset and phrase boundaries. (onset = awal segmen suara; batas frasa disarankan dari jeda ≥ 0,25 dtk berbasis envelope RMS 50 ms/25 ms — sederhana & dapat dijelaskan; estimasi tempo/beat penuh DITUNDA sampai data EXP-0001 menunjukkan kebutuhan)
+- [x] Explore vocal separation and pitch tracking. (DIEKSPLORASI → DITUNDA dengan alasan terdokumentasi: butuh model ML besar / implikasi lisensi & performa; workflow manual + analisis energi belum menunjukkan kebutuhan)
+- [x] Explore syllable/phoneme alignment. (DIEKSPLORASI → DITUNDA: forced alignment butuh model terpisah; koreksi manual + tombol Set dari pemutar sudah cukup cepat untuk MVP)
+- [x] Compare estimates against manual annotations. (akurasi diukur terhadap sinyal sintetis berbatas diketahui: galat batas < 100 ms — unit test; lagu nyata BELUM diukur, terbuka untuk EXP-0001+)
+- [x] Keep manual correction available. (semua saran hanya tampilan; klik jeda → seek untuk verifikasi telinga; timestamp tetap milik pengguna)
 
 Acceptance criteria:
-- Accuracy is measured on representative examples.
-- Uncertain estimates are labeled.
-- Performance and licensing implications are documented.
+- Accuracy is measured on representative examples. → sinyal sintetis 3 segmen: 3/3 segmen & 2/2 jeda terdeteksi, galat < 100 ms (unit test). Catatan jujur: akurasi pada musik nyata belum diukur.
+- Uncertain estimates are labeled. → panel berlabel "estimasi otomatis berbasis energi" + peringatan bagian pelan ≠ jeda.
+- Performance and licensing implications are documented. → 100% lokal via Web Audio API (tanpa lisensi/tanpa jaringan); decode via OfflineAudioContext (andalkan di headless); komputasi O(n) sesuai permintaan; Essentia.js sengaja dihindari (ukuran/lisensi).
 
 ## Phase 7 — Regression, release, and ongoing maintenance
 **Status:** Not started
@@ -135,6 +135,6 @@ Acceptance criteria:
 - Rollback to the last stable version is possible.
 
 ## Next action
-1. Review Phase 1–5 manual di Chrome: load ulang `dist/` (manifest kini butuh izin storage), isi tab Pengaturan dengan layanan AI Anda, coba "Buat kandidat (AI)", nilai hasilnya.
-2. **Jalankan EXP-0001** (worksheet siap) — kini juga mengkalibrasi ambang heuristik dan bobot skor.
-3. Sisa pekerjaan: Phase 6 (analisis audio otomatis — OPSIONAL, ditunda sampai workflow terbukti bernilai) dan Phase 7 (regresi, rilis, dokumentasi akhir).
+1. Review Phase 1–6 manual di Chrome (muat ulang `dist/`): impor `The Sun - Chanmina.mp3`, coba "Analisis jeda (estimasi)", verifikasi saran dengan telinga, set timestamp.
+2. **Jalankan EXP-0001** — worksheet siap; ukur juga akurasi saran jeda pada lagu nyata (bandingkan dengan anotasi manual Anda) sebagai kelanjutan kriteria Phase 6.
+3. Phase 7 — regresi penuh, tinjauan privasi/izin, dokumentasi rilis, tag versi stabil di Git.

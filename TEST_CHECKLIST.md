@@ -73,4 +73,4 @@ For every bug fix:
 - [ ] If tests are blocked, record the reason and do not claim verified success.
 
 ## Current test status
-2026-10-25 — Phase 0: seksi A. Phase 1–5: `npm run verify` exit 0 — build + tsc + ESLint + **74 unit test** (13 berkas, termasuk 5 modul AI: prompt, klien dengan mock fetch, penerapan non-destruktif, penyimpanan konfigurasi) + **7 E2E Chromium** (smoke, persistensi, hapus, audio+overlay, file korup, alur kandidat, **AI: konfigurasi tersimpan + jalur 401 nyata**). Pending: uji ke penyedia AI NYATA (BLOCKED — menunggu kunci pengguna), muat manual Chrome branded, verifikasi visual, skenario penyimpanan penuh, seksi H.
+2026-10-25 — Phase 0: seksi A. Phase 1–6: `npm run verify` exit 0 — build + tsc + ESLint + **80 unit test** (14 berkas, termasuk **akurasi deteksi jeda < 100 ms vs sinyal sintetis berbatas diketahui**) + **8 E2E Chromium** (smoke, persistensi, hapus, audio+overlay, file korup, alur kandidat, AI 401, **analisis jeda end-to-end**). Pending: akurasi analisis pada lagu nyata (EXP-0001), uji penyedia AI nyata (kunci pengguna), muat manual Chrome branded, verifikasi visual, seksi H.

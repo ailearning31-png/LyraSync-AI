@@ -20,7 +20,13 @@ async function seekSlider(slider: Locator, value: number) {
 const dist = resolve(import.meta.dirname, '..', 'dist')
 
 // WAV PCM 16-bit mono sederhana — cukup untuk memutar dan membaca durasi.
-function makeWavBuffer(seconds = 3, sampleRate = 8000): Buffer {
+// Tanpa `segments`: nada menerus. Dengan `segments`: nada hanya pada rentang
+// tertentu (sisanya hening) — untuk menguji deteksi jeda terhadap batas known.
+function makeWavBuffer(
+  seconds = 3,
+  sampleRate = 8000,
+  segments: [number, number][] = [[0, seconds]],
+): Buffer {
   const numSamples = Math.floor(seconds * sampleRate)
   const dataSize = numSamples * 2
   const buffer = Buffer.alloc(44 + dataSize)
@@ -38,7 +44,9 @@ function makeWavBuffer(seconds = 3, sampleRate = 8000): Buffer {
   buffer.write('data', 36)
   buffer.writeUInt32LE(dataSize, 40)
   for (let i = 0; i < numSamples; i += 1) {
-    const sample = Math.sin((2 * Math.PI * 440 * i) / sampleRate) * 0.5
+    const t = i / sampleRate
+    const active = segments.some(([from, to]) => t >= from && t < to)
+    const sample = active ? Math.sin((2 * Math.PI * 440 * i) / sampleRate) * 0.5 : 0
     buffer.writeInt16LE(Math.round(sample * 32767), 44 + i * 2)
   }
   return buffer
@@ -218,10 +226,12 @@ test('audio: impor, timestamp manual, overlay mengikuti seek, dan bertahan setel
     await expect(page.getByText(/0:00\.5 \/ /)).toBeVisible()
 
     // Putar/jeda memakai satu elemen audio yang sama
-    await page.getByRole('button', { name: 'Putar' }).click()
-    await expect(page.getByRole('button', { name: 'Jeda' })).toBeVisible()
-    await page.getByRole('button', { name: 'Jeda' }).click()
-    await expect(page.getByRole('button', { name: 'Putar' })).toBeVisible()
+    await page.getByRole('button', { name: 'Putar', exact: true }).click()
+    await expect(
+      page.getByRole('button', { name: 'Jeda', exact: true }),
+    ).toBeVisible()
+    await page.getByRole('button', { name: 'Jeda', exact: true }).click()
+    await expect(page.getByRole('button', { name: 'Putar', exact: true })).toBeVisible()
 
     await expect(page.getByText('Tersimpan')).toBeVisible({ timeout: 5000 })
 
@@ -417,5 +427,40 @@ test('AI: pengaturan tersimpan lokal, pesan saat belum dikonfigurasi, dan kegaga
   } finally {
     await context.close()
     server.close()
+  }
+})
+
+test('analisis: jeda antar segmen terdeteksi sesuai batas known dan bisa diverifikasi via seek', async () => {
+  const { context, extensionId } = await launchExtension()
+
+  try {
+    const page = await context.newPage()
+    await page.goto(`chrome-extension://${extensionId}/sidepanel.html`)
+
+    await page.getByLabel('Judul proyek baru').fill('Proyek Analisis')
+    await page.getByRole('button', { name: 'Buat proyek' }).click()
+    await page.getByRole('button', { name: 'Buka' }).click()
+
+    // WAV 3.5 dtk: nada [0–1], hening [1–1.5], nada [1.5–2.5], hening [2.5–3], nada [3–3.5]
+    await page.getByLabel('Impor audio lokal').setInputFiles({
+      name: 'bersegmen.wav',
+      mimeType: 'audio/wav',
+      buffer: makeWavBuffer(3.5, 8000, [
+        [0, 1],
+        [1.5, 2.5],
+        [3, 3.5],
+      ]),
+    })
+    await expect(page.getByText('bersegmen.wav')).toBeVisible()
+
+    await page.getByRole('button', { name: 'Analisis jeda (estimasi)' }).click()
+    await expect(page.getByText(/2 jeda/)).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByText(/Estimasi otomatis berbasis energi/)).toBeVisible()
+
+    // Klik jeda pertama → pemutar melompat ke awal jeda (0:01.0)
+    await page.getByRole('button', { name: /Jeda 0:01\.0/ }).click()
+    await expect(page.getByText(/0:01\.0 \/ /)).toBeVisible()
+  } finally {
+    await context.close()
   }
 })

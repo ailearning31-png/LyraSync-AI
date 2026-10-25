@@ -88,7 +88,7 @@ Record observations separately from scores. Scores are experimental and must be 
 | Manual experiments before coding | Required — superseded 2026-10-25 by user direction | User explicitly directed Phase 1 to proceed in parallel ("lanjut ke step selanjutnya"); EXP-0001 remains open and must still be run — its data calibrates heuristics |
 | Indonesian singable adaptation | Core requirement | Preserve meaning and naturalness |
 | Original/romanized lyric overlay | Core investigation | Compare text with phrase timing; romanization is not a timing measurement |
-| Automatic audio analysis | Later phase | Must be validated against manual references |
+| Automatic audio analysis | Later phase → MVP implemented (2026-10-25) | Energy-based pause/onset detection, 100% local via Web Audio API, labeled as estimates; separation/pitch/alignment deferred with documented reasons; real-music accuracy pending EXP-0001 |
 | AI agent memory and revision guard | Required development process | Documentation + tests + version control |
 | AI integration: BYO configuration (2026-10-25) | Working decision | Provider-agnostic OpenAI-compatible endpoint configured by the user in-app; key only in `chrome.storage.local`, never in source; audio never sent — text only, on explicit button press |
 
@@ -104,6 +104,6 @@ A phase is ready to advance when:
 
 ## 9. Current next action
 
-1. **Phase 1–5 built and verified in Chromium** (shell; editor + persistensi; audio + timestamp + overlay; kandidat + heuristik berlabel; integrasi AI BYO-konfigurasi dengan jalur error teruji).
-2. **Pengguna:** isi tab Pengaturan dengan layanan AI pribadi, uji "Buat kandidat (AI)" dengan penyedia nyata (jalur sukses nyata masih BLOCKED menunggu kunci), dan **jalankan EXP-0001** — worksheet siap; datanya mengkalibrasi heuristik & bobot.
-3. Sisa roadmap: Phase 6 (analisis audio otomatis — opsional, ditunda) dan Phase 7 (regresi penuh, rilis, dokumentasi akhir).
+1. **Phase 1–6 built and verified in Chromium** (shell; editor + persistensi; audio + timestamp + overlay; kandidat + heuristik; AI BYO; analisis jeda energi berlabel estimasi dengan akurasi terukur pada sinyal sintetis).
+2. **Pengguna:** uji di Chrome — muat ulang `dist/`, coba "Analisis jeda (estimasi)" pada lagu nyata, isi Pengaturan AI bila mau, dan **jalankan EXP-0001** (worksheet siap; kini juga mengukur akurasi saran jeda pada musik nyata).
+3. Sisa roadmap: **Phase 7** — regresi penuh, tinjauan privasi/izin, dokumentasi rilis, tag versi stabil.
