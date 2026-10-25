@@ -1,0 +1,23 @@
+# Dependencies / build output (dipakai mulai Phase 1)
+node_modules/
+dist/
+build/
+
+# Environment & secrets — jangan pernah commit
+.env
+.env.*
+*.local
+
+# Media berhak cipta — repo ini PUBLIK, audio tidak boleh masuk
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.m4a
+*.aac
+
+# Catatan lokal pribadi (bisa berisi lirik berhak cipta; tidak pernah di-push)
+local/
+
+# State tool (ZCode)
+.zcode/
