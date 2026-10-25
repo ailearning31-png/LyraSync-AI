@@ -1,13 +1,13 @@
 export type AiSlot = 'meaning' | 'balanced' | 'singability'
 
-/** Konfigurasi layanan AI milik pengguna — hanya disimpan lokal (storage.local). */
+/** Konfigurasi layanan AI milik pengguna: hanya disimpan lokal (storage.local). */
 export interface AiSettings {
   baseUrl: string
   apiKey: string
   model: string
 }
 
-/** Konteks frasa yang DIKIRIM ke layanan AI (teks saja — audio tidak pernah). */
+/** Konteks frasa yang DIKIRIM ke layanan AI (teks saja: audio tidak pernah). */
 export interface PhraseContext {
   source: string
   romanized: string

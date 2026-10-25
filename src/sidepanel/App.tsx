@@ -66,20 +66,13 @@ export function App() {
             </p>
           ))}
 
-        {activeTab === 'experiments' && (
-          <p className="empty-hint">
-            Pembanding kandidat dan catatan eksperimen adaptasi akan hadir di
-            Fase 4.
-          </p>
-        )}
-
         {activeTab === 'settings' && <SettingsPanel />}
       </main>
 
       <ErrorBanner />
 
       <footer className="app-footer">
-        v{version} · Fase 5 — integrasi AI
+        v{version} · beta
       </footer>
     </div>
   )

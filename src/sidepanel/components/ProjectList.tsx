@@ -112,7 +112,7 @@ export function ProjectList({
             id="new-project-title"
             type="text"
             value={newTitle}
-            placeholder="Mis. The Sun — cover Indonesia"
+            placeholder="Mis. The Sun - cover Indonesia"
             onChange={(event) => setNewTitle(event.target.value)}
           />
           <button type="submit" disabled={newTitle.trim() === '' || busy}>

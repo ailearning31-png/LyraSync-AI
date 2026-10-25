@@ -1,4 +1,4 @@
-# EXP-0001 — Worksheet Eksperimen Adaptasi Lirik Manual
+# EXP-0001: Worksheet Eksperimen Adaptasi Lirik Manual
 
 > Produk: **LyraSync AI** · Fase 0 (validasi metode manual) · Status: **menunggu eksekusi manual**
 > Log induk: `EXPERIMENT_LOG.md` (EXP-0001) · Salinan isian: `local/EXP-0001-ISIAN.md` (di-gitignore, tidak pernah di-push)
@@ -19,48 +19,48 @@
 
 Kerjakan berurutan; isi salinan `local/EXP-0001-ISIAN.md` sambil mengerjakan.
 
-### Langkah 1 — Pilih frasa (±5 mnt)
+### Langkah 1: Pilih frasa (±5 mnt)
 - Pilih **2–4 baris yang dinyanyikan** (bukan bagian rap cepat untuk eksperimen pertama); disarankan bagian chorus yang mudah dikenali.
 - Putar dari awal, catat waktu **mulai** dan **selesai** frasa format `mm:ss.d`.
 - Ulangi pengecekan 2–3×; kalau hasilnya bergeser lebih dari ±0,5 detik, pakai rata-rata dan catat ketidakyakinannya.
 
-### Langkah 2 — Tandai fitur vokal (±5 mnt)
+### Langkah 2: Tandai fitur vokal (±5 mnt)
 Putar frasa berulang dan tandai per baris/kata:
-- **Jeda/pause** — di antara kata atau baris mana.
-- **Vokal panjang (held note)** — suku kata mana yang ditarik, kira-kira berapa detik.
-- **Melisma** — satu suku kata melewati beberapa nada (tandai suku katanya).
-- **Kepadatan relatif** — baris mana yang paling cepat/padat.
+- **Jeda/pause**: di antara kata atau baris mana.
+- **Vokal panjang (held note)**: suku kata mana yang ditarik, kira-kira berapa detik.
+- **Melisma**: satu suku kata melewati beberapa nada (tandai suku katanya).
+- **Kepadatan relatif**: baris mana yang paling cepat/padat.
 
-### Langkah 3 — Lirik sumber + romaji (di salinan lokal) (±5 mnt)
-- Tulis teks sumber (Jepang) **beserta romaji per baris** — romaji yang mengikuti pengucapan nyata saat dinyanyikan, bukan transliterasi harfiah kanji.
+### Langkah 3: Lirik sumber + romaji (di salinan lokal) (±5 mnt)
+- Tulis teks sumber (Jepang) **beserta romaji per baris**: romaji yang mengikuti pengucapan nyata saat dinyanyikan, bukan transliterasi harfiah kanji.
 - Sumber lirik harus dari yang berhak Anda gunakan (koleksi pribadi, transkrip telinga sendiri, atau sumber berlisensi yang Anda miliki). Jangan menyalin dari web tanpa izin.
 
-### Langkah 4 — Estimasi mora & kepadatan sumber (±5 mnt)
+### Langkah 4: Estimasi mora & kepadatan sumber (±5 mnt)
 - Bahasa Jepang dihitung per **mora**, bukan suku kata: setiap kana = 1 mora; sokuon `っ` dan hatsuon `ん` masing-masing juga 1 mora; vokal panjang (ー / kana tambahan) tetap dihitung.
 - Hitung total mora frasa, lalu bagi durasi frasa → **kepadatan sumber** (mora/detik). Ini pembanding utama untuk kandidat Indonesia.
 
-### Langkah 5 — Tiga kandidat Indonesia (±10 mnt)
+### Langkah 5: Tiga kandidat Indonesia (±10 mnt)
 Satu kandidat per pendekatan, di salinan lokal:
-- **A — meaning-first:** kesetiaan makna dulu; bentuk kalimat boleh agak canggung untuk dinyanyikan.
-- **B — balanced:** inti makna dipertahankan, pilihan kata diarahkan ke yang wajar dinyanyikan.
-- **C — singability-first:** kecocokan panjang & tekanan jadi prioritas; makna inti tetap ada tapi boleh longgar.
+- **A: meaning-first:** kesetiaan makna dulu; bentuk kalimat boleh agak canggung untuk dinyanyikan.
+- **B: balanced:** inti makna dipertahankan, pilihan kata diarahkan ke yang wajar dinyanyikan.
+- **C: singability-first:** kecocokan panjang & tekanan jadi prioritas; makna inti tetap ada tapi boleh longgar.
 Catat 1–2 kalimat alasan pilihan kata penting per kandidat.
 
-### Langkah 6 — Kepadatan tiap kandidat (±2 mnt)
+### Langkah 6: Kepadatan tiap kandidat (±2 mnt)
 - Hitung suku kata Indonesia tiap kandidat ÷ durasi frasa → suku kata/detik.
 - Bandingkan dengan kepadatan sumber: lebih padat / setara / lebih renggang.
-- Ingat: angka ini **heuristik** — melisma dan vokal panjang membuat perbedaan kecil masih wajar.
+- Ingat: angka ini **heuristik**: melisma dan vokal panjang membuat perbedaan kecil masih wajar.
 
-### Langkah 7 — Uji nyanyi/baca (±10 mnt)
+### Langkah 7: Uji nyanyi/baca (±10 mnt)
 - Nyanyikan (atau lantunkan mengikuti melodi) **tiap kandidat 2–3×** mengikuti audio.
 - Catat spesifik, bukan umum: *di kata mana* tersangkut/kepanjangan, tekanan jatuh di suku kata yang salah, bagian yang harus ditarik/dipotong paksa.
 - Boleh rekam dengan HP agar telinga Anda bisa membandingkan ulang.
 
-### Langkah 8 — Skor 1–5 memakai rubrik §2 (±3 mnt)
+### Langkah 8: Skor 1–5 memakai rubrik §2 (±3 mnt)
 
-### Langkah 9 — Skor berbobot memakai rumus §3 (±1 mnt)
+### Langkah 9: Skor berbobot memakai rumus §3 (±1 mnt)
 
-### Langkah 10 — Kesimpulan & pemenang (aturan §4)
+### Langkah 10: Kesimpulan & pemenang (aturan §4)
 Opsional: uji kandidat terkuat ke workflow generasi (mis. Suno) **hanya jika** Anda punya akses & izin; catat setting secukupnya agar bisa direproduksi (tanpa kredensial).
 
 ## 2. Rubrik berjangkar (skor 1–5 per dimensi)
@@ -96,9 +96,9 @@ Anchors membuat penskoran konsisten antar percobaan; nilai 2 dan 4 berada di ant
 - 1 = pelafalan salah total / hasil tidak bisa dipakai
 - 3 = dimengerti tapi ada salah ucap/tekanan
 - 5 = pelafalan & frasa terdengar tepat
-- Jika tidak dites tulis **Not tested** — jangan mengarang nilai.
+- Jika tidak dites tulis **Not tested**: jangan mengarang nilai.
 
-## 3. Skor berbobot — HIPOTESIS, dapat dikalibrasi
+## 3. Skor berbobot: HIPOTESIS, dapat dikalibrasi
 
 > Bobot ini adalah hipotesis awal, **bukan fakta ilmiah**. Setelah beberapa eksperimen, kalibrasi dan catat perubahannya di `EXPERIMENT_LOG.md`.
 
@@ -121,7 +121,7 @@ Rumus: `total = 0.30·R + 0.20·S + 0.20·N + 0.20·M + 0.10·I` (masukan 1–5,
 3. Kandidat dengan nilai **Meaning ≤ 2 tidak boleh menjadi pemenang** meski totalnya tertinggi (makna inti wajib terjaga). Catat sebagai *disqualification*.
 4. Tulis pemenang + alasan di bagian kesimpulan salinan lokal.
 
-## 5. Lembar isian — isi di `local/EXP-0001-ISIAN.md`
+## 5. Lembar isian: isi di `local/EXP-0001-ISIAN.md`
 
 Kolom isian mengikuti template `EXPERIMENT_LOG.md`: tanggal; frasa (start/end); lirik sumber + romaji; mora & kepadatan; jeda/vokal panjang/melisma; Kandidat A/B/C + alasan; suku kata & kepadatan tiap kandidat; observasi uji nyanyi per putaran; skor 6 dimensi; masalah teramati; audio result (Not tested / Passed / Mixed / Failed); perubahan antar-iterasi; kesimpulan (Verified for this phrase / Tentative / Inconclusive); aturan yang bisa dipakai ulang (jika ada); confidence (Low / Medium / High); eksperimen berikutnya.
 

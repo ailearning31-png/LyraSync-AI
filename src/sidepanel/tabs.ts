@@ -1,4 +1,4 @@
-export type TabId = 'projects' | 'editor' | 'experiments' | 'settings'
+export type TabId = 'projects' | 'editor' | 'settings'
 
 export interface TabDef {
   id: TabId
@@ -8,6 +8,5 @@ export interface TabDef {
 export const TABS: TabDef[] = [
   { id: 'projects', label: 'Proyek' },
   { id: 'editor', label: 'Editor' },
-  { id: 'experiments', label: 'Eksperimen' },
   { id: 'settings', label: 'Pengaturan' },
 ]

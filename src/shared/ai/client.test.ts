@@ -65,7 +65,7 @@ describe('generateCandidates', () => {
     expect(fetchFn).not.toHaveBeenCalled()
   })
 
-  it('mode lokal: kunci kosong sah — request terkirim TANPA header Authorization', async () => {
+  it('mode lokal: kunci kosong sah: request terkirim TANPA header Authorization', async () => {
     const fetchFn = vi.fn(async () =>
       jsonResponse({ choices: [{ message: { content: JSON.stringify(validPayload) } }] }),
     )

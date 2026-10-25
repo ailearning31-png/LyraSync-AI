@@ -13,7 +13,7 @@ function assertSettings(settings: AiSettings): void {
   // apiKey OPSIONAL: server lokal (mis. Ollama) tidak memerlukan kunci.
   if (baseUrl === '' || model === '' || !/^https?:\/\//i.test(baseUrl)) {
     throw new AiError(
-      'AI belum dikonfigurasi dengan lengkap. Buka tab Pengaturan: isi alamat layanan (http/https) dan nama model. Kunci API opsional — kosongkan untuk server lokal seperti Ollama.',
+      'AI belum dikonfigurasi dengan lengkap. Buka tab Pengaturan: isi alamat layanan (http/https) dan nama model. Kunci API opsional: kosongkan untuk server lokal seperti Ollama.',
     )
   }
 }
@@ -24,7 +24,7 @@ function stripCodeFence(content: string): string {
   return fenced !== null ? fenced[1] : trimmed
 }
 
-/** Parse & validasi keluaran model — output tidak valid ditolak, bukan disimpan. */
+/** Parse & validasi keluaran model: output tidak valid ditolak, bukan disimpan. */
 export function parseAiResponse(content: string): GeneratedCandidate[] {
   let parsed: unknown
   try {
@@ -63,7 +63,7 @@ export function parseAiResponse(content: string): GeneratedCandidate[] {
 }
 
 /**
- * Satu percobaan per panggilan — TIDAK ada retry otomatis (mencegah permintaan
+ * Satu percobaan per panggilan: TIDAK ada retry otomatis (mencegah permintaan
  * berlebihan); pengguna yang memutuskan menekan ulang. Timeout memakai AbortController.
  * Pesan error tidak pernah menyertakan kunci API.
  */
@@ -85,7 +85,7 @@ export async function generateCandidates(options: {
   try {
     let response: Response
     try {
-      // Header Authorization hanya dikirim bila kunci diisi — server lokal
+      // Header Authorization hanya dikirim bila kunci diisi: server lokal
       // (Ollama) tidak memerlukannya dan tidak boleh menerima header kosong.
       const headers: Record<string, string> = { 'Content-Type': 'application/json' }
       const apiKey = settings.apiKey.trim()
@@ -103,7 +103,7 @@ export async function generateCandidates(options: {
     } catch (error) {
       if (controller.signal.aborted) {
         throw new AiError(
-          `Waktu tunggu habis (${Math.round(timeoutMs / 1000)} detik) — layanan AI tidak merespons.`,
+          `Waktu tunggu habis (${Math.round(timeoutMs / 1000)} detik): layanan AI tidak merespons.`,
         )
       }
       throw new AiError(

@@ -71,7 +71,7 @@ export async function getProject(id: string): Promise<Project | null> {
 
 export async function saveProject(project: Project): Promise<Project> {
   if (!isProjectRecord(project)) {
-    throw new Error('Data proyek tidak valid — tidak disimpan')
+    throw new Error('Data proyek tidak valid: tidak disimpan')
   }
   if (project.title.trim() === '') {
     throw new Error('Judul proyek tidak boleh kosong')

@@ -17,7 +17,7 @@ function makeSignal(ranges: [number, number][], totalSeconds: number, amplitude 
   return samples
 }
 
-describe('analyzeEnergyPcm — akurasi vs batas yang diketahui (sinyal sintetis)', () => {
+describe('analyzeEnergyPcm: akurasi vs batas yang diketahui (sinyal sintetis)', () => {
   it('mendeteksi 3 segmen dan 2 jeda dengan galat < 100 ms', () => {
     const signal = makeSignal(
       [
@@ -82,7 +82,7 @@ describe('analyzeEnergyPcm — akurasi vs batas yang diketahui (sinyal sintetis)
     expect(result.segments).toHaveLength(0)
   })
 
-  it('lebih dari dua kanal tidak masalah — analisis bekerja pada PCM apa pun', () => {
+  it('lebih dari dua kanal tidak masalah: analisis bekerja pada PCM apa pun', () => {
     // sinyal sangat pendek di bawah minSegment → tidak ada segmen
     const signal = makeSignal([[0, 0.05]], 0.2)
     const result = analyzeEnergyPcm(signal, SAMPLE_RATE)

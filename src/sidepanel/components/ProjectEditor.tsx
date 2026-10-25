@@ -28,7 +28,7 @@ const STATUS_TEXT: Record<SaveStatus, string> = {
   idle: '',
   saving: 'Menyimpan…',
   saved: 'Tersimpan',
-  error: 'Gagal menyimpan — perubahan masih ada di layar. Coba Simpan atau edit lagi.',
+  error: 'Gagal menyimpan: perubahan masih ada di layar. Coba Simpan atau edit lagi.',
 }
 
 export function ProjectEditor({
@@ -287,7 +287,7 @@ export function ProjectEditor({
     }))
 
   // Satu percobaan per klik (tanpa retry otomatis). Kegagalan tidak pernah
-  // menghapus pekerjaan pengguna — hanya menampilkan pesan.
+  // menghapus pekerjaan pengguna: hanya menampilkan pesan.
   const handleGenerateCandidates = async (phraseId: string) => {
     if (project === null || generatingPhraseId !== null) return
     const phrase = project.phrases.find((p) => p.id === phraseId)
@@ -338,11 +338,11 @@ export function ProjectEditor({
       }))
       if (filledTotal === 0) {
         setNotice(
-          'AI menghasilkan kandidat, tetapi semua slot sudah terisi — kosongkan slot yang ingin diganti lalu coba lagi.',
+          'AI menghasilkan kandidat, tetapi semua slot sudah terisi: kosongkan slot yang ingin diganti lalu coba lagi.',
         )
       } else {
         setNotice(
-          `${filledTotal} kandidat AI diterima. Periksa, sunting, dan nilai sebelum dipakai — hasil AI bukan jaminan kecocokan melodi.`,
+          `${filledTotal} kandidat AI diterima. Periksa, sunting, dan nilai sebelum dipakai: hasil AI bukan jaminan kecocokan melodi.`,
         )
       }
     } catch (error) {
@@ -372,7 +372,7 @@ export function ProjectEditor({
       setNotice('Audio tersimpan secara lokal (tidak diunggah ke mana pun)')
     } catch (error) {
       setActionError(
-        `Gagal menyimpan audio — penyimpanan mungkin penuh atau file terlalu besar: ${
+        `Gagal menyimpan audio: penyimpanan mungkin penuh atau file terlalu besar: ${
           error instanceof Error ? error.message : String(error)
         }`,
       )

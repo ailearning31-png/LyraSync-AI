@@ -9,9 +9,9 @@ import {
 import type { Candidate, CandidateScores, Phrase } from '../../shared/types'
 
 const SLOT_NAMES = [
-  'A — meaning-first',
-  'B — balanced',
-  'C — singability-first',
+  'A: meaning-first',
+  'B: balanced',
+  'C: singability-first',
 ] as const
 
 const SCORE_FIELDS: { key: keyof CandidateScores; label: string }[] = [
@@ -132,7 +132,7 @@ function CandidateRow({
 
   const syllableLabel =
     syllables === null
-      ? 'suku kata: —'
+      ? 'suku kata: -'
       : `≈ ${syllables} suku kata${
           candidate.syllablesOverride !== null
             ? ' (koreksi manual)'
@@ -246,7 +246,7 @@ function CandidateRow({
                 )
               }
             >
-              <option value="">—</option>
+              <option value="">-</option>
               {[1, 2, 3, 4, 5].map((n) => (
                 <option key={n} value={n}>
                   {n}
@@ -288,7 +288,7 @@ function CandidateTable({
   return (
     <table className="candidate-table">
       <caption>
-        Perbandingan berdampingan — semua angka estimasi/hipotesis, bukan bukti
+        Perbandingan berdampingan: semua angka estimasi/hipotesis, bukan bukti
         kecocokan melodi. Putar audio dan nyanyikan tiap kandidat untuk memutuskan.
       </caption>
       <thead>
@@ -305,14 +305,14 @@ function CandidateTable({
         <tr>
           <th scope="row">Teks</th>
           {candidates.map((c) => (
-            <td key={c.id}>{c.text || '—'}</td>
+            <td key={c.id}>{c.text || '-'}</td>
           ))}
         </tr>
         <tr>
           <th scope="row">Suku kata (est.)</th>
           {candidates.map((c) => {
             const s = effectiveSyllables(c.text, c.syllablesOverride)
-            return <td key={c.id}>{s === null ? '—' : `≈ ${s}`}</td>
+            return <td key={c.id}>{s === null ? '-' : `≈ ${s}`}</td>
           })}
         </tr>
         <tr>
@@ -322,7 +322,7 @@ function CandidateTable({
               effectiveSyllables(c.text, c.syllablesOverride),
               duration,
             )
-            return <td key={c.id}>{d === null ? '—' : d}</td>
+            return <td key={c.id}>{d === null ? '-' : d}</td>
           })}
         </tr>
         <tr>
@@ -339,7 +339,7 @@ function CandidateTable({
           <tr key={key}>
             <th scope="row">{label}</th>
             {candidates.map((c) => (
-              <td key={c.id}>{c.scores[key] ?? '—'}</td>
+              <td key={c.id}>{c.scores[key] ?? '-'}</td>
             ))}
           </tr>
         ))}
@@ -353,7 +353,7 @@ function CandidateTable({
         <tr>
           <th scope="row">Catatan</th>
           {candidates.map((c) => (
-            <td key={c.id}>{c.notes || '—'}</td>
+            <td key={c.id}>{c.notes || '-'}</td>
           ))}
         </tr>
       </tbody>

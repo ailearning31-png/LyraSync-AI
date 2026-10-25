@@ -10,7 +10,7 @@ export function formatTimestamp(seconds: number | null): string {
 }
 
 // Menerima "m:ss.d" (mis. "1:02.5") atau detik polos ("62.5"). Mengembalikan
-// null bila tidak bisa diparse — pemanggil UI memutuskan cara memulihkannya.
+// null bila tidak bisa diparse: pemanggil UI memutuskan cara memulihkannya.
 export function parseTimeInput(input: string): number | null {
   const trimmed = input.trim()
   if (trimmed === '') return null

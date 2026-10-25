@@ -121,7 +121,7 @@ export function SettingsPanel() {
             <p className="field-hint">
               Endpoint kompatibel OpenAI (OpenAI, OpenRouter, Groq, atau Ollama
               lokal di <code>http://localhost:11434/v1</code>). Untuk LLM lokal,
-              jalankan Ollama dengan OLLAMA_ORIGINS sesuai ID ekstensi —
+              jalankan Ollama dengan OLLAMA_ORIGINS sesuai ID ekstensi 
               langkah lengkap di README.
             </p>
           </div>

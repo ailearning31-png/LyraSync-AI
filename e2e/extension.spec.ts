@@ -93,9 +93,9 @@ test('ekstensi dimuat: service worker aktif dan sidepanel dirender tanpa error',
     await expect(page.getByRole('heading', { name: 'LyraSync AI' })).toBeVisible()
     await expect(page.getByText('Fit the Lyrics. Feel the Melody.')).toBeVisible()
 
-    // Navigasi dasar antar-tab
-    await page.getByRole('tab', { name: 'Eksperimen' }).click()
-    await expect(page.getByRole('tabpanel')).toContainText('Fase 4')
+    // Navigasi dasar antar-tab (konten nyata, tanpa tab placeholder)
+    await page.getByRole('tab', { name: 'Pengaturan' }).click()
+    await expect(page.getByText(/audio/).first()).toBeVisible()
     await page.getByRole('tab', { name: 'Proyek' }).click()
     await expect(page.getByLabel('Judul proyek baru')).toBeVisible()
 
@@ -338,7 +338,7 @@ test('kandidat: estimasi suku kata, heuristik, skor berbobot, bandingkan, terapk
     ])
     expect(download.suggestedFilename()).toMatch(/^eksperimen-.*\.md$/)
     const markdown = await readFile(await download.path(), 'utf-8')
-    expect(markdown).toContain('# Eksperimen adaptasi — Proyek Kandidat')
+    expect(markdown).toContain('# Eksperimen adaptasi: Proyek Kandidat')
     expect(markdown).toContain('### Kandidat A')
     expect(markdown).toContain('estimasi/hipotesis')
 

@@ -35,7 +35,7 @@ export function useAudioPlayer(
     if (finite !== null) durationCallbackRef.current?.(finite)
   }, [])
 
-  // Satu elemen Audio untuk seluruh siklus hidup hook — tidak ada kemungkinan
+  // Satu elemen Audio untuk seluruh siklus hidup hook: tidak ada kemungkinan
   // playback ganda karena selalu elemen yang sama yang diputar/dijeda.
   const ensureElement = useCallback((): HTMLAudioElement => {
     if (audioRef.current !== null) return audioRef.current
@@ -48,7 +48,7 @@ export function useAudioPlayer(
     el.addEventListener('pause', () => setPlaying(false))
     el.addEventListener('ended', () => setPlaying(false))
     el.addEventListener('error', () => {
-      setError('Audio tidak dapat diputar — format mungkin tidak didukung atau file rusak.')
+      setError('Audio tidak dapat diputar: format mungkin tidak didukung atau file rusak.')
       setPlaying(false)
     })
     audioRef.current = el

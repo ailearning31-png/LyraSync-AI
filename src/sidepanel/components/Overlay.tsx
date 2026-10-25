@@ -5,7 +5,7 @@ import type { Phrase } from '../../shared/types'
 
 // Overlay lirik terkoordinasi: frasa yang rentang waktunya memuat posisi
 // audio ditandai aktif (aria-current) dan otomatis digulir ke pandangan.
-// Semua waktu berasal dari entri manual — tidak pernah ditebak dari panjang teks.
+// Semua waktu berasal dari entri manual: tidak pernah ditebak dari panjang teks.
 export function Overlay({
   phrases,
   currentTime,
@@ -40,7 +40,7 @@ export function Overlay({
             title={canSeek ? 'Klik untuk melompat ke frasa ini' : undefined}
           >
             <span className="overlay-time">
-              {phrase.start !== null ? formatTimestamp(phrase.start) : '—'}
+              {phrase.start !== null ? formatTimestamp(phrase.start) : '-'}
             </span>
             <span className="overlay-texts">
               <span className="overlay-index">#{index + 1}</span>

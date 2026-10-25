@@ -3,7 +3,7 @@ import type { Candidate, Phrase, Project } from './types'
 // Pemastian bentuk data saat MEMBACA dari penyimpanan: record yang rusak
 // (mis. hasil penulisan yang terpotong atau versi lama) harus bisa dilewati,
 // bukan membuat seluruh aplikasi gagal. Kolom yang ditambahkan belakangan
-// (start/end/notes/audio) boleh tidak ada pada record lama — normalisasi di
+// (start/end/notes/audio) boleh tidak ada pada record lama: normalisasi di
 // projectRepo yang mengisi defaultnya.
 export function isPhraseRecord(value: unknown): value is Phrase {
   if (typeof value !== 'object' || value === null) return false

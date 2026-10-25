@@ -102,6 +102,3 @@ export async function clearAiSettings(): Promise<void> {
   await getStore().remove(STORAGE_KEY)
 }
 
-export function hasAiSettings(): Promise<boolean> {
-  return loadAiSettings().then((s) => s !== null)
-}

@@ -47,7 +47,7 @@ describe('buildExperimentMarkdown', () => {
       ],
     })
     const md = buildExperimentMarkdown(project)
-    expect(md).toContain('# Eksperimen adaptasi — Lagu Uji')
+    expect(md).toContain('# Eksperimen adaptasi: Lagu Uji')
     expect(md).toContain('uji.wav')
     expect(md).toContain('## Frasa 1 (0.5 – 2.0 dtk)')
     expect(md).toContain('- Sumber: テスト')
@@ -56,7 +56,7 @@ describe('buildExperimentMarkdown', () => {
     expect(md).toContain('estimasi/hipotesis')
   })
 
-  it('kandidat tanpa skor ditulis dengan tanda —', () => {
+  it('kandidat tanpa skor ditulis dengan tanda -', () => {
     const project = makeProject({
       phrases: [
         {
@@ -72,7 +72,7 @@ describe('buildExperimentMarkdown', () => {
       ],
     })
     const md = buildExperimentMarkdown(project)
-    expect(md).toContain('Makna — · Alami — · Ritme — · Stres — · Nyanyi —')
+    expect(md).toContain('Makna - · Alami - · Ritme - · Stres - · Nyanyi -')
     expect(md).toContain('(koreksi manual)')
     expect(md).toContain('Adaptasi terpilih: (kosong)')
   })
@@ -99,7 +99,7 @@ describe('buildExperimentMarkdown', () => {
 
   it('proyek tanpa frasa tetap menghasilkan dokumen valid', () => {
     const md = buildExperimentMarkdown(makeProject())
-    expect(md).toContain('# Eksperimen adaptasi — Lagu Uji')
+    expect(md).toContain('# Eksperimen adaptasi: Lagu Uji')
     expect(md).toContain('(belum ada frasa)')
   })
 })

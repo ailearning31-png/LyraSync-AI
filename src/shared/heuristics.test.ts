@@ -28,7 +28,7 @@ describe('estimateSyllables', () => {
     expect(estimateSyllables('ありがとう')).toEqual({ count: 5, uncertain: false })
   })
 
-  it('kanji tidak bisa dihitung otomatis — ditandai tidak pasti', () => {
+  it('kanji tidak bisa dihitung otomatis: ditandai tidak pasti', () => {
     expect(estimateSyllables('太陽')).toEqual({ count: 0, uncertain: true })
     expect(estimateSyllables('太陽の光')).toEqual({ count: 1, uncertain: true })
   })
@@ -89,7 +89,7 @@ describe('weightedTotal', () => {
     ).toBe(3.6)
   })
 
-  it('null bila ada dimensi yang belum diisi — tanpa presisi palsu', () => {
+  it('null bila ada dimensi yang belum diisi: tanpa presisi palsu', () => {
     expect(
       weightedTotal({ meaning: 3, naturalness: 4, rhythm: 4, stress: 3, singability: null }),
     ).toBeNull()

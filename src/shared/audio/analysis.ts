@@ -1,6 +1,6 @@
 // Analisis energi sederhana yang dapat dijelaskan (Fase 6 MVP):
 // envelope RMS per frame → segmen suara vs jeda. SEMUA hasil adalah
-// ESTIMASI — musik nyata punya bagian pelan yang bukan jeda; koreksi
+// ESTIMASI: musik nyata punya bagian pelan yang bukan jeda; koreksi
 // manual tetap sumber utama. Murni lokal (Web Audio API), tanpa dependensi.
 
 export interface PauseSuggestion {

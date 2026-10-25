@@ -18,7 +18,7 @@ export function buildExperimentMarkdown(project: Project): string {
     timeStyle: 'short',
   })
   const lines: string[] = [
-    `# Eksperimen adaptasi — ${project.title}`,
+    `# Eksperimen adaptasi: ${project.title}`,
     '',
     `Diekspor: ${exportedAt} · LyraSync AI`,
     `Audio referensi: ${project.audioName ?? '(belum ada)'}${
@@ -27,7 +27,7 @@ export function buildExperimentMarkdown(project: Project): string {
         : ''
     }`,
     '',
-    '> Semua angka di bawah adalah estimasi/hipotesis — bukan bukti kecocokan melodi.',
+    '> Semua angka di bawah adalah estimasi/hipotesis: bukan bukti kecocokan melodi.',
     '',
   ]
 
@@ -69,11 +69,11 @@ export function buildExperimentMarkdown(project: Project): string {
       }
       lines.push('- Catatan kandidat: ' + (candidate.notes || '(kosong)'))
       const scoreParts = [
-        `Makna ${candidate.scores.meaning ?? '—'}`,
-        `Alami ${candidate.scores.naturalness ?? '—'}`,
-        `Ritme ${candidate.scores.rhythm ?? '—'}`,
-        `Stres ${candidate.scores.stress ?? '—'}`,
-        `Nyanyi ${candidate.scores.singability ?? '—'}`,
+        `Makna ${candidate.scores.meaning ?? '-'}`,
+        `Alami ${candidate.scores.naturalness ?? '-'}`,
+        `Ritme ${candidate.scores.rhythm ?? '-'}`,
+        `Stres ${candidate.scores.stress ?? '-'}`,
+        `Nyanyi ${candidate.scores.singability ?? '-'}`,
       ]
       lines.push(`- Skor (1–5): ${scoreParts.join(' · ')}`)
     })

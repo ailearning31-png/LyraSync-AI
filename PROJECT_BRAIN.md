@@ -1,4 +1,4 @@
-# LyraSync AI — Project Brain
+# LyraSync AI: Project Brain
 
 > **Project status:** Planning / manual experiment first  
 > **Product type:** Chrome Extension (Manifest V3)  
@@ -85,12 +85,13 @@ Record observations separately from scores. Scores are experimental and must be 
 | Decision | Status | Notes |
 |---|---|---|
 | Product name: LyraSync AI | Working decision | Can change if branding conflict is found |
-| Manual experiments before coding | Required — superseded 2026-10-25 by user direction | User explicitly directed Phase 1 to proceed in parallel ("lanjut ke step selanjutnya"); EXP-0001 remains open and must still be run — its data calibrates heuristics |
+| Manual experiments before coding | Required: superseded 2026-10-25 by user direction | User explicitly directed Phase 1 to proceed in parallel ("lanjut ke step selanjutnya"); EXP-0001 remains open and must still be run: its data calibrates heuristics |
 | Indonesian singable adaptation | Core requirement | Preserve meaning and naturalness |
 | Original/romanized lyric overlay | Core investigation | Compare text with phrase timing; romanization is not a timing measurement |
 | Automatic audio analysis | Later phase → MVP implemented (2026-10-25) | Energy-based pause/onset detection, 100% local via Web Audio API, labeled as estimates; separation/pitch/alignment deferred with documented reasons; real-music accuracy pending EXP-0001 |
 | AI agent memory and revision guard | Required development process | Documentation + tests + version control |
-| AI integration: BYO configuration (2026-10-25) | Working decision | Provider-agnostic OpenAI-compatible endpoint configured by the user in-app; key optional (empty = local server like Ollama, no Authorization header sent); key only in `chrome.storage.local`, never in source; audio never sent — text only, on explicit button press |
+| AI integration: BYO configuration (2026-10-25) | Working decision | Provider-agnostic OpenAI-compatible endpoint configured by the user in-app; key optional (empty = local server like Ollama, no Authorization header sent); key only in `chrome.storage.local`, never in source; audio never sent: text only, on explicit button press |
+| Design direction (anti-slop R-37, 2026-10-25) | Draft without direction | UI is a calm utility panel, dials ENERGY 1 / RHYTHM 1 / MOTION 1, labeled honestly in README; no restyling for trends; user may supply a DESIGN.md later |
 
 ## 8. Definition of useful progress
 
@@ -105,5 +106,5 @@ A phase is ready to advance when:
 ## 9. Current next action
 
 1. **Phase 1–7 (beta) built, audited, and tagged `v0.1.0-beta.1`** (2026-10-25): regresi penuh lulus, privasi/izin/keamanan teraudit bersih, rilis dapat direproduksi & di-rollback. Tag beta ≠ siap produksi.
-2. **Pengguna jalankan EXP-0001 sekarang** — satu frasa pendek dari "The Sun", konfigurasi AI pribadi di tab Pengaturan, tekan "Buat kandidat (AI)", nyanyikan tiap kandidat, isi `local/EXP-0001-ISIAN.md` (worksheet lengkap tersedia). Hasil: kalibrasi heuristik + validasi metode.
+2. **Pengguna jalankan EXP-0001 sekarang**: satu frasa pendek dari "The Sun", konfigurasi AI pribadi di tab Pengaturan, tekan "Buat kandidat (AI)", nyanyikan tiap kandidat, isi `local/EXP-0001-ISIAN.md` (worksheet lengkap tersedia). Hasil: kalibrasi heuristik + validasi metode.
 3. Kriteria naik dari beta ke rilis penuh: EXP-0001 tervalidasi + uji AI penyedia nyata + review manual Chrome branded. Phase 6 lanjutan (separation/pitch/alignment/tempo) tetap ditunda sampai workflow utama terbukti.

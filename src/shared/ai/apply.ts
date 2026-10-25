@@ -5,7 +5,7 @@ const SLOT_ORDER: GeneratedCandidate['slot'][] = ['meaning', 'balanced', 'singab
 
 /**
  * Mengisi slot kandidat dari hasil AI secara NON-DESTRUKTIF: hanya slot yang
- * teksnya kosong yang diisi — teks tulisan pengguna tidak pernah ditimpa.
+ * teksnya kosong yang diisi: teks tulisan pengguna tidak pernah ditimpa.
  * Rationale disimpan di catatan kandidat dengan penanda [AI model].
  */
 export function applyGeneratedCandidates(
@@ -38,7 +38,7 @@ export function applyGeneratedCandidates(
     }
 
     const target = next[slotIndex]
-    if (target.text.trim() !== '') continue // slot terisi — tidak ditimpa
+    if (target.text.trim() !== '') continue // slot terisi: tidak ditimpa
     next[slotIndex] = {
       ...target,
       text: item.text,

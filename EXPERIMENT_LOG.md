@@ -1,10 +1,10 @@
-# LyraSync AI — Lyric and Audio Experiment Log
+# LyraSync AI: Lyric and Audio Experiment Log
 
 Record each manual lyric-adaptation experiment. Do not store copyrighted lyrics in a public repository unless the user has the necessary rights. Use private/local notes for material that must not be redistributed.
 
 ## Experiment template
 
-### EXP-YYYYMMDD-NN — Short description
+### EXP-YYYYMMDD-NN: Short description
 - **Date:**
 - **Song / artist:**
 - **Audio permission/source:** User-owned / Licensed / Permission granted / Other (explain)
@@ -16,9 +16,9 @@ Record each manual lyric-adaptation experiment. Do not store copyrighted lyrics 
 - **Source syllable or phonetic-unit estimate:**
 - **Phrase duration:**
 - **Held vowels / pauses / melisma:**
-- **Candidate A — meaning-first:**
-- **Candidate B — balanced:**
-- **Candidate C — singability-first:**
+- **Candidate A: meaning-first:**
+- **Candidate B: balanced:**
+- **Candidate C: singability-first:**
 - **Scores (1–5):** Meaning / Naturalness / Rhythm / Stress / Singability / Audio result
 - **Observed problems:** Crowding / Stretch risk / Stress mismatch / Meaning drift / Other
 - **Suno or generation test settings:** Record enough to reproduce; never store secrets
@@ -31,23 +31,23 @@ Record each manual lyric-adaptation experiment. Do not store copyrighted lyrics 
 
 ---
 
-## EXP-0001 — First experiment (The Sun — Chanmina)
-- **Status:** Prepared — menunggu eksekusi pengguna (belum diuji)
-- **Song / artist:** The Sun — Chanmina (user-owned local copy)
-- **Audio reference:** `The Sun - Chanmina.mp3` — local file, gitignored. Measured via ffprobe (2026-10-25): MP3, 48 kHz, stereo, 212.22 s (≈ 3:32), ~250 kbps.
+## EXP-0001: First experiment (The Sun - Chanmina)
+- **Status:** Prepared: menunggu eksekusi pengguna (belum diuji)
+- **Song / artist:** The Sun - Chanmina (user-owned local copy)
+- **Audio reference:** `The Sun - Chanmina.mp3`: local file, gitignored. Measured via ffprobe (2026-10-25): MP3, 48 kHz, stereo, 212.22 s (≈ 3:32), ~250 kbps.
 - **Procedure:** `EXPERIMENT_WORKSHEET_EXP-0001.md` (step-by-step method, anchored rubric, weighted-score hypothesis, winner rules)
-- **Filled answers:** `local/EXP-0001-ISIAN.md` (gitignored — the GitHub repo is PUBLIC; copyrighted lyrics must never be committed)
+- **Filled answers:** `local/EXP-0001-ISIAN.md` (gitignored: the GitHub repo is PUBLIC; copyrighted lyrics must never be committed)
 - **Goal:** Determine whether source lyric overlay, phrase duration, and syllable estimates help select more singable Indonesian adaptations.
-- **Kesiapan alat (audit Phase 7, 2026-10-25):** semua 6 langkah pengguna didukung dan teruji otomatis —
+- **Kesiapan alat (audit Phase 7, 2026-10-25):** semua 6 langkah pengguna didukung dan teruji otomatis :
   1. Buka ekstensi tanpa error → E2E smoke lulus.
   2. Buka halaman Pengaturan → tab "Pengaturan" tersedia.
   3. Konfigurasi provider AI sesuai implementasi → BYO endpoint kompatibel OpenAI (Base URL + kunci + model; kunci hanya lokal).
   4. Masukkan satu frasa pendek → "Tambah frasa" + 3 kolom teks.
   5. Tekan "Buat kandidat (AI)" → tombol tersedia per frasa.
-  6. Lihat kandidat atau pesan error yang jelas → jalur error teruji (belum dikonfigurasi / 401); **jalur sukses dengan penyedia nyata BELUM diuji — butuh kunci pengguna**.
-- **Catatan mode (diperbarui 2026-10-25, menggantikan catatan sebelumnya):** mode lokal gratis KINI tersedia via Ollama (REV-0010) — tanpa API key: tab Pengaturan → "Preset Ollama lokal" → ikuti README (pasang Ollama, pull model, atur OLLAMA_ORIGINS sesempit mungkin = ID ekstensi). Alternatif tetap: layanan cloud ber-kunci. Kualitas model lokal bervariasi — catat nama model yang dipakai di hasil eksperimen. Jalur Ollama asli diuji pengguna; di CI terverifikasi lewat server tiruan berformat identik (E2E #9).
+  6. Lihat kandidat atau pesan error yang jelas → jalur error teruji (belum dikonfigurasi / 401); **jalur sukses dengan penyedia nyata BELUM diuji: butuh kunci pengguna**.
+- **Catatan mode (diperbarui 2026-10-25, menggantikan catatan sebelumnya):** mode lokal gratis KINI tersedia via Ollama (REV-0010): tanpa API key: tab Pengaturan → "Preset Ollama lokal" → ikuti README (pasang Ollama, pull model, atur OLLAMA_ORIGINS sesempit mungkin = ID ekstensi). Alternatif tetap: layanan cloud ber-kunci. Kualitas model lokal bervariasi: catat nama model yang dipakai di hasil eksperimen. Jalur Ollama asli diuji pengguna; di CI terverifikasi lewat server tiruan berformat identik (E2E #9).
 - **Important limitation:** Text length and syllable count do not establish melodic fit by themselves. Audio and human listening remain necessary.
-- **Result:** Not run. (Belum diuji — menunggu pengguna; jangan mengarang hasil.)
+- **Result:** Not run. (Belum diuji: menunggu pengguna; jangan mengarang hasil.)
 - **Method:**
   1. Select one short phrase (initially 2–4 lines).
   2. Note source text, optional romanization, start/end time, and obvious held notes or pauses.

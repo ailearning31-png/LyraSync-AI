@@ -41,7 +41,7 @@ export function AudioAnalysisPanel({
         <button
           type="button"
           disabled={audioBlob === null || running}
-          title="Deteksi jeda antar frasa berbasis energi — estimasi otomatis, koreksi manual tetap sumber utama"
+          title="Deteksi jeda antar frasa berbasis energi: estimasi otomatis, koreksi manual tetap sumber utama"
           onClick={() => void handleRun()}
         >
           {running ? 'Menganalisis…' : 'Analisis jeda (estimasi)'}
@@ -64,7 +64,7 @@ export function AudioAnalysisPanel({
         <>
           <p className="analysis-note">
             Estimasi otomatis berbasis energi (ambang {result.threshold.toFixed(4)} dari
-            puncak). Musik nyata punya bagian pelan yang bukan jeda — verifikasi
+            puncak). Musik nyata punya bagian pelan yang bukan jeda: verifikasi
             dengan telinga dan koreksi manual.
           </p>
           {result.pauses.length === 0 ? (

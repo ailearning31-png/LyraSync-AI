@@ -78,6 +78,7 @@ body {
   font-size: 0.85rem;
   border-radius: 8px 8px 0 0;
   cursor: pointer;
+  min-height: 44px;
 }
 
 .tab.active {
@@ -118,6 +119,7 @@ button {
   padding: 6px 12px;
   font-size: 0.82rem;
   cursor: pointer;
+  min-height: 44px;
 }
 
 button:hover {
@@ -342,6 +344,7 @@ label {
 .player-row .seek {
   flex: 1;
   accent-color: var(--accent);
+  height: 44px;
 }
 
 .player-time {
@@ -399,7 +402,9 @@ label {
 }
 
 .button-like {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   border: 1px solid var(--border);
   background: var(--panel);
   color: var(--text);

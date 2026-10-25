@@ -5,7 +5,7 @@ import type { CandidateScores } from './types'
 // kecocokan melodi. Audio dan telinga manusia tetap yang menentukan.
 
 /**
- * Bobot skor berbobot — HIPOTESIS awal dari master prompt, belum terkalibrasi.
+ * Bobot skor berbobot: HIPOTESIS awal dari master prompt, belum terkalibrasi.
  * Kalibrasi hanya boleh dilakukan dari data eksperimen nyata (EXP-0001 dst.).
  */
 export const SCORE_WEIGHTS = {
@@ -92,7 +92,7 @@ export type RiskLevel = 'padat' | 'renggang' | 'setara' | 'nodata'
 
 /**
  * Bandingkan kepadatan kandidat vs sumber. Ambang 1,25 / 0,7 adalah
- * HIPOTESIS awal — harus dikalibrasi dari eksperimen nyata.
+ * HIPOTESIS awal: harus dikalibrasi dari eksperimen nyata.
  */
 export function densityRisk(
   candidateDensity: number | null,
@@ -109,7 +109,7 @@ export function densityRisk(
 }
 
 /**
- * Total berbobot hanya dihitung bila KELIMA dimensi terisi — selain itu null
+ * Total berbobot hanya dihitung bila KELIMA dimensi terisi: selain itu null
  * (ditampilkan "belum cukup data") supaya tidak ada presisi palsu.
  */
 export function weightedTotal(scores: CandidateScores): number | null {
